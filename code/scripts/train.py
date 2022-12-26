@@ -1,9 +1,14 @@
+import sys
+sys.path.append("/iliad/u/manasis/decision-diffuser-goal/code")
+
 import diffuser.utils as utils
 import torch
 
 def main(**deps):
     #from ml_logger import logger, RUN
+    #sys.path.append("..")
     from config.locomotion_config import Config
+    #from locomotion_config import Config
 
     #RUN._update(deps)
     Config._update(deps)

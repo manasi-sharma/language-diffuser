@@ -1,6 +1,7 @@
 import torch
 
-from params_proto.neo_proto import ParamsProto, PrefixProto, Proto
+#from params_proto.neo_proto import ParamsProto, PrefixProto, Proto
+from params_proto.proto import ParamsProto, PrefixProto, Proto
 
 class Config(ParamsProto):
     # misc
@@ -57,3 +58,7 @@ class Config(ParamsProto):
     save_parallel = False
     n_reference = 8
     save_checkpoints = False
+
+    def __init__(self):
+        super().__init__()
+        pass

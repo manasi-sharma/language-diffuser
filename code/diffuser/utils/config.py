@@ -34,7 +34,9 @@ class Config(collections.Mapping):
 
         if savepath is not None:
             #logger.save_pkl(self, savepath)
-            pickle.dump(self, savepath)
+            #print("\n\nself: ", type(self), "\n\n")
+            with open(savepath, 'wb') as handle:
+                pickle.dump(self, handle)
             print(f'[ utils/config ] Saved config to: {savepath}\n')
 
     def __repr__(self):
@@ -63,6 +65,10 @@ class Config(collections.Mapping):
             raise AttributeError(attr)
 
     def __call__(self, *args, **kwargs):
+        #print("\n\nself._class: ", self._class)
+        #print("*args: ", *args)
+        #print("**kwargs: ", **kwargs)
+        #print("**self._dict: ", **self._dict, "\n\n")
         instance = self._class(*args, **kwargs, **self._dict)
         if self._device:
             instance = instance.to(self._device)
