@@ -7,14 +7,14 @@ class Config(ParamsProto):
     # misc
     seed = 100
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    bucket = '/home/gridsan/aajay/weights/'
+    bucket = '/iliad/u/manasis/decision-diffuser-goal/code/logs/'
     dataset = 'hopper-medium-expert-v2'
 
     ## model
     model = 'models.TemporalUnet'
     diffusion = 'models.GaussianInvDynDiffusion'
     horizon = 100
-    n_diffusion_steps = 200
+    n_diffusion_steps = 1
     action_weight = 10
     loss_weights = None
     loss_discount = 1
@@ -44,9 +44,9 @@ class Config(ParamsProto):
     returns_scale = 400.0 # Determined using rewards from the dataset
 
     ## training
-    n_steps_per_epoch = 10000
+    n_steps_per_epoch = 1
     loss_type = 'l2'
-    n_train_steps = 1e6
+    n_train_steps = 5
     batch_size = 32
     learning_rate = 2e-4
     gradient_accumulate_every = 2

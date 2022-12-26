@@ -159,7 +159,8 @@ class Trainer(object):
             'ema': self.ema_model.state_dict()
         }
         #savepath = os.path.join(self.bucket, logger.prefix, 'checkpoint')
-        print("\n\nself.bucket: ", self.bucket, "\n\n")
+        #print("\n\nself.bucket: ", self.bucket)
+        #print("dataset: ", self.dataset, "\n\n")
         savepath = os.path.join(self.bucket, 'checkpoint')
         os.makedirs(savepath, exist_ok=True)
         # logger.save_torch(data, savepath)
