@@ -27,7 +27,7 @@ def evaluate(**deps):
     else:
         prefix = f'predict_x0_{Config.n_diffusion_steps}_1000000.0'
 
-    state_dict = torch.load(f'/home/gridsan/pchandak/abhi/aajay/weights/scratch/default_inv/{prefix}/dropout_{Config.condition_dropout}/{Config.dataset}/100/checkpoint/state.pt',
+    state_dict = torch.load(f'/iliad/u/manasis/decision-diffuser-goal/code/logs/checkpoint/state.pt',
                             map_location=Config.device)
 
     # Load configs
@@ -186,3 +186,6 @@ def evaluate(**deps):
     #logger.print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}", color='green')
     print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}", color='green')
     #logger.log_metrics_summary({'average_ep_reward':np.mean(episode_rewards), 'std_ep_reward':np.std(episode_rewards)})
+
+if __name__ == "__main__":
+    evaluate()
