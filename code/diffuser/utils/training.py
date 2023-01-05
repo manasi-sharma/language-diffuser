@@ -124,7 +124,6 @@ class Trainer(object):
                 self.step_ema()
 
             if self.step % self.save_freq == 0:
-                import pdb;pdb.set_trace()
                 self.save()
 
             if self.step % self.log_freq == 0:

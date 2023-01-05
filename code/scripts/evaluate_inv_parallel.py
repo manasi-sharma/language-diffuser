@@ -121,7 +121,6 @@ def evaluate(**deps):
     trainer = trainer_config(diffusion, dataset, renderer)
     #logger.print(utils.report_parameters(model), color='green')
     print(utils.report_parameters(model))
-    #import pdb;pdb.set_trace()
     trainer.step = state_dict['step']
     trainer.model.load_state_dict(state_dict['model'])
     trainer.ema_model.load_state_dict(state_dict['ema'])

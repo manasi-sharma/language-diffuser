@@ -301,7 +301,6 @@ class GaussianInvDynDiffusion(nn.Module):
         self.model = model
         self.ar_inv = ar_inv
         self.train_only_inv = train_only_inv
-        #import pdb;pdb.set_trace()
         if self.ar_inv:
             self.inv_model = ARInvModel(hidden_dim=hidden_dim, observation_dim=observation_dim, action_dim=action_dim)
         else:

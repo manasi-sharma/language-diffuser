@@ -1,0 +1,5 @@
+defaults:
+  - datamodule: default
+  - model: default
+
+seed: 42
