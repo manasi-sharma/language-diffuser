@@ -1,5 +1,5 @@
 import sys
-sys.path.append("/iliad/u/manasis/decision-diffuser-goal/code")
+sys.path.append("/iliad/u/manasis/language-diffuser/code")
 
 import diffuser.utils as utils
 #from ml_logger import logger
@@ -30,7 +30,7 @@ def evaluate(**deps):
     else:
         prefix = f'predict_x0_{Config.n_diffusion_steps}_1000000.0'
 
-    state_dict = torch.load(f'/iliad/u/manasis/decision-diffuser-goal/code/logs/checkpoint/state_4.pt',
+    state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
                             map_location=Config.device)
 
     # Load configs
