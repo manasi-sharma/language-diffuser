@@ -1,1 +1,1 @@
-# lamguage-diffuser
+# language-diffuser
