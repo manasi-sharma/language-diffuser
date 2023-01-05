@@ -47,8 +47,6 @@ def main(config_name, **deps):
         datamodule.prepare_data()
         datamodule.setup()
         dataloader = datamodule.val_dataloader()
-        import pdb;pdb.set_trace()
-
 
         dataset_config = utils.Config(
             Config.loader,
@@ -72,6 +70,7 @@ def main(config_name, **deps):
         )
 
         dataset = dataset_config()
+        import pdb;pdb.set_trace()
         renderer = render_config()
         observation_dim = dataset.observation_dim
         action_dim = dataset.action_dim
