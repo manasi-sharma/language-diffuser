@@ -124,6 +124,7 @@ class Trainer(object):
                 self.step_ema()
 
             if self.step % self.save_freq == 0:
+                import pdb;pdb.set_trace()
                 self.save()
 
             if self.step % self.log_freq == 0:
@@ -167,7 +168,7 @@ class Trainer(object):
         if self.save_checkpoints:
             savepath = os.path.join(savepath, f'state_{self.step}.pt')
         else:
-            savepath = os.path.join(savepath, 'state.pt')
+            savepath = os.path.join(savepath, 'state_4.pt')
         torch.save(data, savepath)
         #logger.print(f'[ utils/training ] Saved model to {savepath}')
 
@@ -176,7 +177,7 @@ class Trainer(object):
             loads model and ema from disk
         '''
         #loadpath = os.path.join(self.bucket, logger.prefix, f'checkpoint/state.pt')
-        loadpath = os.path.join(self.bucket, 'checkpoint/state.pt')
+        loadpath = os.path.join(self.bucket, 'checkpoint/state_4.pt')
         # data = logger.load_torch(loadpath)
         data = torch.load(loadpath)
 
@@ -217,7 +218,7 @@ class Trainer(object):
         # observations = blocks_add_kuka(observations)
         ####
 
-        savepath = os.path.join('images', f'sample-reference.png')
+        savepath = os.path.join('logs/images', f'sample-reference.png')
         self.renderer.composite(savepath, observations)
 
     def render_samples(self, batch_size=2, n_samples=2):
@@ -273,7 +274,7 @@ class Trainer(object):
             # observations = blocks_add_kuka(observations)
             ####
 
-            savepath = os.path.join('images', f'sample-{i}.png')
+            savepath = os.path.join('logs/images', f'sample-{i}.png')
             self.renderer.composite(savepath, observations)
 
     def inv_render_samples(self, batch_size=2, n_samples=2):
@@ -329,5 +330,5 @@ class Trainer(object):
             # observations = blocks_add_kuka(observations)
             ####
 
-            savepath = os.path.join('images', f'sample-{i}.png')
+            savepath = os.path.join('logs/images', f'sample-{i}.png')
             self.renderer.composite(savepath, observations)

@@ -164,6 +164,7 @@ class TemporalUnet(nn.Module):
 
         print(in_out)
         for ind, (dim_in, dim_out) in enumerate(in_out):
+            #import pdb;pdb.set_trace()
             is_last = ind >= (num_resolutions - 1)
 
             self.downs.append(nn.ModuleList([

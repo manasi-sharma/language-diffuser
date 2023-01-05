@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/iliad/u/manasis/decision-diffuser-goal/code")
+
 import diffuser.utils as utils
 #from ml_logger import logger
 import torch
@@ -27,7 +30,7 @@ def evaluate(**deps):
     else:
         prefix = f'predict_x0_{Config.n_diffusion_steps}_1000000.0'
 
-    state_dict = torch.load(f'/iliad/u/manasis/decision-diffuser-goal/code/logs/checkpoint/state.pt',
+    state_dict = torch.load(f'/iliad/u/manasis/decision-diffuser-goal/code/logs/checkpoint/state_4.pt',
                             map_location=Config.device)
 
     # Load configs
@@ -117,7 +120,8 @@ def evaluate(**deps):
     diffusion = diffusion_config(model)
     trainer = trainer_config(diffusion, dataset, renderer)
     #logger.print(utils.report_parameters(model), color='green')
-    print(utils.report_parameters(model), color='green')
+    print(utils.report_parameters(model))
+    #import pdb;pdb.set_trace()
     trainer.step = state_dict['step']
     trainer.model.load_state_dict(state_dict['model'])
     trainer.ema_model.load_state_dict(state_dict['ema'])
@@ -153,7 +157,7 @@ def evaluate(**deps):
         if t == 0:
             normed_observations = samples[:, :, :]
             observations = dataset.normalizer.unnormalize(normed_observations, 'observations')
-            savepath = os.path.join('images', 'sample-planned.png')
+            savepath = os.path.join('logs/images', 'sample-planned.png')
             renderer.composite(savepath, observations)
 
         obs_list = []
@@ -167,7 +171,7 @@ def evaluate(**deps):
                     dones[i] = 1
                     episode_rewards[i] += this_reward
                     #logger.print(f"Episode ({i}): {episode_rewards[i]}", color='green')
-                    print(f"Episode ({i}): {episode_rewards[i]}", color='green')
+                    print(f"Episode ({i}): {episode_rewards[i]}")
             else:
                 if dones[i] == 1:
                     pass
@@ -179,12 +183,12 @@ def evaluate(**deps):
         t += 1
 
     recorded_obs = np.concatenate(recorded_obs, axis=1)
-    savepath = os.path.join('images', f'sample-executed.png')
+    savepath = os.path.join('logs/images', f'sample-executed.png')
     renderer.composite(savepath, recorded_obs)
     episode_rewards = np.array(episode_rewards)
 
     #logger.print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}", color='green')
-    print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}", color='green')
+    print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}")
     #logger.log_metrics_summary({'average_ep_reward':np.mean(episode_rewards), 'std_ep_reward':np.std(episode_rewards)})
 
 if __name__ == "__main__":
