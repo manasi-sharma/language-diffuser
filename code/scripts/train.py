@@ -7,6 +7,7 @@ import torch
 import hydra
 import os
 from omegaconf import DictConfig, ListConfig, OmegaConf
+from pytorch_lightning import Callback, LightningModule, seed_everything, Trainer
 
 
 def main(config_name, **deps):
