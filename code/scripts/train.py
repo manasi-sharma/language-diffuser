@@ -1,6 +1,6 @@
 import sys
 sys.path.append("/iliad/u/manasis/decision-diffuser-goal/code")
-
+ 
 import diffuser.utils as utils
 import torch
 
