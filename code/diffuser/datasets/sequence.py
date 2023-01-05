@@ -111,7 +111,6 @@ class SequenceDataset(torch.utils.data.Dataset):
             batch = RewardBatch(trajectories, conditions, returns)
         else:
             batch = Batch(trajectories, conditions)
-
         return batch
 
 class CondSequenceDataset(torch.utils.data.Dataset):
