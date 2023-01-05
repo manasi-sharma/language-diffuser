@@ -13,7 +13,7 @@ class Config(ParamsProto):
     ## model
     model = 'models.TemporalUnet'
     diffusion = 'models.GaussianInvDynDiffusion'
-    horizon = 100
+    horizon = 32 #CHANGED
     n_diffusion_steps = 1
     action_weight = 10
     loss_weights = None
@@ -34,7 +34,7 @@ class Config(ParamsProto):
     preprocess_fns = []
     clip_denoised = True
     use_padding = True
-    include_returns = True
+    include_returns = False #CHANGED
     discount = 0.99
     max_path_length = 1000
     hidden_dim = 256

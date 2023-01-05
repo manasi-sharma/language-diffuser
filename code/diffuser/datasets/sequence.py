@@ -15,15 +15,19 @@ ValueBatch = namedtuple('ValueBatch', 'trajectories conditions values')
 class SequenceDataset(torch.utils.data.Dataset):
 
     def __init__(self, env='hopper-medium-replay', horizon=64,
-        normalizer='LimitsNormalizer', preprocess_fns=[], max_path_length=1000,
-        max_n_episodes=10000, termination_penalty=0, use_padding=True, discount=0.99, returns_scale=1000, include_returns=False):
-        self.preprocess_fn = get_preprocess_fn(preprocess_fns, env)
-        self.env = env = load_environment(env)
-        self.returns_scale = returns_scale
+        normalizer='LimitsNormalizer', #preprocess_fns=[], 
+        max_path_length=1000,
+        max_n_episodes=10000, #termination_penalty=0, 
+        use_padding=True, #discount=0.99, returns_scale=1000, 
+        include_returns=False):
+
+        #self.preprocess_fn = get_preprocess_fn(preprocess_fns, env)
+        #self.env = env = load_environment(env)
+        #self.returns_scale = returns_scale
         self.horizon = horizon
         self.max_path_length = max_path_length
-        self.discount = discount
-        self.discounts = self.discount ** np.arange(self.max_path_length)[:, None]
+        #self.discount = discount
+        #self.discounts = self.discount ** np.arange(self.max_path_length)[:, None]
         self.use_padding = use_padding
         self.include_returns = include_returns
         itr = sequence_dataset(env, self.preprocess_fn)
@@ -35,9 +39,10 @@ class SequenceDataset(torch.utils.data.Dataset):
         # timeouts and terminals were only applied to returns, not needed
         # infos/qpos, qvel, etc. are used for rendering (images), comment that out of training
 
-        fields = ReplayBuffer(max_n_episodes, max_path_length, termination_penalty)
+        fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
         for i, episode in enumerate(itr):
             import pdb;pdb.set_trace()
+            # here is where to do all the changes
             fields.add_path(episode)
         fields.finalize()
 

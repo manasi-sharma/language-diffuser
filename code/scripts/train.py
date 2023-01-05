@@ -46,7 +46,8 @@ def main(config_name, **deps):
         datamodule = hydra.utils.instantiate(cfg.datamodule)
         datamodule.prepare_data()
         datamodule.setup()
-        dataloader = datamodule.val_dataloader()
+        calvin_dataset = datamodule.train_datasets
+        #dataloader = datamodule.val_dataloader()
 
         dataset_config = utils.Config(
             Config.loader,
