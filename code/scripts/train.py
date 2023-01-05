@@ -13,7 +13,6 @@ def main(config_name, **deps):
     #def train(cfg: DictConfig) -> None:
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def train(cfg: DictConfig) -> None:
-        import pdb;pdb.set_trace()
 
         #from ml_logger import logger, RUN
         #sys.path.append("..")
@@ -35,10 +34,20 @@ def main(config_name, **deps):
         #                 """, filename=".charts.yml", dedent=True, overwrite=True)
 
         torch.backends.cudnn.benchmark = True
-        utils.set_seed(Config.seed)
+        #utils.set_seed(Config.seed)
         # -----------------------------------------------------------------------------#
         # ---------------------------------- dataset ----------------------------------#
         # -----------------------------------------------------------------------------#
+
+        seed_everything(cfg.seed, workers=True)  # type: ignore
+
+        # Dataset
+        datamodule = hydra.utils.instantiate(cfg.datamodule)
+        datamodule.prepare_data()
+        datamodule.setup()
+        dataloader = datamodule.val_dataloader()
+        import pdb;pdb.set_trace()
+
 
         dataset_config = utils.Config(
             Config.loader,
