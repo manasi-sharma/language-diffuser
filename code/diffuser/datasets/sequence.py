@@ -28,8 +28,13 @@ class SequenceDataset(torch.utils.data.Dataset):
         self.include_returns = include_returns
         itr = sequence_dataset(env, self.preprocess_fn)
 
+        # self.max_path_length
+        # max_n_episodes = 10000
+        # env and preprocess_fn are not needed
+
         fields = ReplayBuffer(max_n_episodes, max_path_length, termination_penalty)
         for i, episode in enumerate(itr):
+            import pdb;pdb.set_trace()
             fields.add_path(episode)
         fields.finalize()
 
