@@ -31,6 +31,9 @@ class SequenceDataset(torch.utils.data.Dataset):
         # self.max_path_length
         # max_n_episodes = 10000
         # env and preprocess_fn are not needed
+        # in episode, 'next_observation' is not needed as no preprocess_fn is being applied
+        # timeouts and terminals were only applied to returns, not needed
+        # infos/qpos, qvel, etc. are used for rendering (images), comment that out of training
 
         fields = ReplayBuffer(max_n_episodes, max_path_length, termination_penalty)
         for i, episode in enumerate(itr):
