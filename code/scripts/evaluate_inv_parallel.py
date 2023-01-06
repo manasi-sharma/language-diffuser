@@ -163,6 +163,7 @@ def main(config_name, **deps):
         recorded_obs = [deepcopy(obs[:, None])]
 
         while sum(dones) <  num_eval:
+            import pdb;pdb.set_trace()
             obs = dataset.normalizer.normalize(obs, 'observations')
             conditions = {0: to_torch(obs, device=device)}
             samples = trainer.ema_model.conditional_sample(conditions, returns=returns)
