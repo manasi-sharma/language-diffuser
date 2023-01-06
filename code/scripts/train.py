@@ -42,17 +42,17 @@ def main(config_name, **deps):
 
         seed_everything(cfg.seed, workers=True)  # type: ignore
 
-        # Dataset
+        """# Dataset
         datamodule = hydra.utils.instantiate(cfg.datamodule)
         datamodule.prepare_data()
         datamodule.setup()
         calvin_dataset = datamodule.train_datasets
-        #dataloader = datamodule.val_dataloader()
+        #dataloader = datamodule.val_dataloader()"""
 
         dataset_config = utils.Config(
             Config.loader,
             savepath='dataset_config.pkl',
-            env=Config.dataset,
+            cfg=cfg,
             horizon=Config.horizon,
             normalizer=Config.normalizer,
             preprocess_fns=Config.preprocess_fns,
@@ -71,7 +71,6 @@ def main(config_name, **deps):
         )
 
         dataset = dataset_config()
-        import pdb;pdb.set_trace()
         renderer = render_config()
         observation_dim = dataset.observation_dim
         action_dim = dataset.action_dim

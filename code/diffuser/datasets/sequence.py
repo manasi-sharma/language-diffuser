@@ -8,13 +8,20 @@ from .d4rl import load_environment, sequence_dataset
 from .normalization import DatasetNormalizer
 from .buffer import ReplayBuffer
 
+from pathlib import Path
+import play_lmp as models_m
+import hydra
+
+
 RewardBatch = namedtuple('Batch', 'trajectories conditions returns')
 Batch = namedtuple('Batch', 'trajectories conditions')
 ValueBatch = namedtuple('ValueBatch', 'trajectories conditions values')
 
 class SequenceDataset(torch.utils.data.Dataset):
 
-    def __init__(self, env='hopper-medium-replay', horizon=64,
+    def __init__(self, #env='hopper-medium-replay',
+        cfg=None,
+        horizon=64,
         normalizer='LimitsNormalizer', #preprocess_fns=[], 
         max_path_length=1000,
         max_n_episodes=10000, #termination_penalty=0, 
@@ -30,7 +37,34 @@ class SequenceDataset(torch.utils.data.Dataset):
         #self.discounts = self.discount ** np.arange(self.max_path_length)[:, None]
         self.use_padding = use_padding
         self.include_returns = include_returns
-        itr = sequence_dataset(env, self.preprocess_fn)
+        
+        """Dataset initialization"""
+        datamodule = hydra.utils.instantiate(cfg.datamodule)
+        datamodule.prepare_data()
+        datamodule.setup()
+        calvin_dataloader = datamodule.train_dataloader()['lang']
+
+        """Model initialization"""
+        chk = Path("/iliad/u/manasis/conditional-diffuser/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())
+        #import pdb;pdb.set_trace()
+
+        # Load Model
+        if chk is not None:
+            model = getattr(models_m, cfg.model["_target_"].split(".")[-1]).load_from_checkpoint(chk.as_posix())
+        else:
+            model = hydra.utils.instantiate(cfg.model)
+        
+        """Creating embeddings initialization"""
+        for i, batch in enumerate(calvin_dataloader):
+            import pdb;pdb.set_trace()
+            perceptual_emb = model.perceptual_encoder(
+                    batch['lang']['rgb_obs'], batch['lang']["depth_obs"], batch['lang']["robot_obs"]) #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+            #perceptual_emb = model.perceptual_encoder(batch['lang']['rgb_obs'], batch['lang']["depth_obs"], torch.empty((32, 32, 0))); output is torch.Size([32, 32, 64])
+
+            #2. Language embedding (condition embedding)
+            latent_goal = model.language_goal(batch["lang"]['lang']) #torch.Size([32, 384]) --> torch.Size([32, 32])
+        
+        #itr = sequence_dataset(env, self.preprocess_fn)
 
         # self.max_path_length
         # max_n_episodes = 10000
