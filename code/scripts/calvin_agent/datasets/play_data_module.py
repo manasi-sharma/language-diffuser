@@ -105,7 +105,7 @@ class PlayDataModule(pl.LightningDataModule):
         t_dl = {
             key: DataLoader(
                 dataset,
-                batch_size=dataset.batch_size,
+                batch_size=1,
                 num_workers=self.num_workers,
                 pin_memory=False,
             )
@@ -118,7 +118,7 @@ class PlayDataModule(pl.LightningDataModule):
         val_dataloaders = {
             key: DataLoader(
                 dataset,
-                batch_size=dataset.batch_size,
+                batch_size=1,
                 num_workers=self.num_workers,
                 pin_memory=False,
             )

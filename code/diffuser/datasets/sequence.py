@@ -1,6 +1,3 @@
-import sys
-sys.path.append("/iliad/u/manasis/language-diffuser/code/scripts")
-
 from collections import namedtuple
 import numpy as np
 import torch
