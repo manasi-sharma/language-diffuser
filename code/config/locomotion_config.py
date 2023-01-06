@@ -20,7 +20,7 @@ class Config(ParamsProto):
     loss_discount = 1
     predict_epsilon = True
     dim_mults = (1, 4, 8)
-    returns_condition = True
+    returns_condition = False
     calc_energy=False
     dim=128
     condition_dropout=0.25
