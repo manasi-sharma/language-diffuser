@@ -57,8 +57,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         """Creating embeddings initialization"""
         for i, batch in enumerate(calvin_dataloader):
             import pdb;pdb.set_trace()
-            perceptual_emb = model.perceptual_encoder(
-                    batch['lang']['rgb_obs'], batch['lang']["depth_obs"], batch['lang']["robot_obs"]) #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+            perceptual_emb = model.perceptual_encoder(batch['rgb_obs'], batch["depth_obs"], batch["robot_obs"]) #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
             #perceptual_emb = model.perceptual_encoder(batch['lang']['rgb_obs'], batch['lang']["depth_obs"], torch.empty((32, 32, 0))); output is torch.Size([32, 32, 64])
 
             #2. Language embedding (condition embedding)
