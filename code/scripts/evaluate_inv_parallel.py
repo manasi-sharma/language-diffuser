@@ -211,6 +211,7 @@ def main(config_name, **deps):
         #logger.print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}", color='green')
         print(f"average_ep_reward: {np.mean(episode_rewards)}, std_ep_reward: {np.std(episode_rewards)}")
         #logger.log_metrics_summary({'average_ep_reward':np.mean(episode_rewards), 'std_ep_reward':np.std(episode_rewards)})
+    eval()
 
 def setup_config():
     config_str = next((x for x in sys.argv if "config_name" in x), None)
