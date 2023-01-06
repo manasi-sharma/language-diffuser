@@ -21,6 +21,7 @@ class SequenceDataset(torch.utils.data.Dataset):
 
     def __init__(self, #env='hopper-medium-replay',
         cfg=None,
+        train_flag=True,
         horizon=64,
         normalizer='LimitsNormalizer', #preprocess_fns=[], 
         max_path_length=1000,
@@ -42,7 +43,10 @@ class SequenceDataset(torch.utils.data.Dataset):
         datamodule = hydra.utils.instantiate(cfg.datamodule)
         datamodule.prepare_data()
         datamodule.setup()
-        calvin_dataloader = datamodule.train_dataloader()['lang']
+        if train_flag:
+            calvin_dataloader = datamodule.train_dataloader()['lang']
+        else:
+            calvin_dataloader = datamodule.val_dataloader()['lang']
 
         """Model initialization"""
         chk = Path("/iliad/u/manasis/conditional-diffuser/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())

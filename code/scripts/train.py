@@ -53,6 +53,7 @@ def main(config_name, **deps):
             Config.loader,
             savepath='dataset_config.pkl',
             cfg=cfg,
+            train_flag=True,
             horizon=Config.horizon,
             normalizer=Config.normalizer,
             #preprocess_fns=Config.preprocess_fns,
