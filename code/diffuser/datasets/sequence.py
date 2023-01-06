@@ -72,9 +72,9 @@ class SequenceDataset(torch.utils.data.Dataset):
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
         for i, batch in enumerate(calvin_dataloader):
             episode = {}
-            perceptual_emb = model.perceptual_encoder(batch['rgb_obs'], batch["depth_obs"], batch["robot_obs"]).squeeze() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
-            latent_goal = model.language_goal(batch['lang']).squeeze() #torch.Size([32, 384]) --> torch.Size([32, 32])
-            action_emb = batch['actions'].squeeze()
+            perceptual_emb = model.perceptual_encoder(batch['rgb_obs'], batch["depth_obs"], batch["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+            latent_goal = model.language_goal(batch['lang']).squeeze().detach().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
+            action_emb = batch['actions'].squeeze().detach().numpy()
             episode['observations'] = perceptual_emb
             episode['actions'] = action_emb
             episode['language'] = latent_goal
