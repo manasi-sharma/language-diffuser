@@ -38,7 +38,7 @@ class DatasetNormalizer:
         return self.normalize(*args, **kwargs)
 
     def normalize(self, x, key):
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         return self.normalizers[key].normalize(x)
 
     def unnormalize(self, x, key):
@@ -212,7 +212,7 @@ class CDFNormalizer(Normalizer):
     def wrap(self, fn_name, x):
         shape = x.shape
         ## reshape to 2d
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         x = x.reshape(-1, self.dim)
         out = np.zeros_like(x)
         for i, cdf in enumerate(self.cdfs):
@@ -221,7 +221,7 @@ class CDFNormalizer(Normalizer):
         return out.reshape(shape)
 
     def normalize(self, x):
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         return self.wrap('normalize', x)
 
     def unnormalize(self, x):
