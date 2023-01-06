@@ -43,7 +43,6 @@ class SequenceDataset(torch.utils.data.Dataset):
         datamodule.prepare_data()
         datamodule.setup()
         calvin_dataloader = datamodule.train_dataloader()['lang']
-        import pdb;pdb.set_trace()
 
         """Model initialization"""
         chk = Path("/iliad/u/manasis/conditional-diffuser/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())
