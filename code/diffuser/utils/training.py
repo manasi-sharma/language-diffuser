@@ -135,7 +135,7 @@ class Trainer(object):
                 metrics['loss'] = loss.detach().item()
                 #logger.log_metrics_summary(metrics, default_stats='mean')
 
-            if self.step == 0 and self.sample_freq:
+            """if self.step == 0 and self.sample_freq:
                 self.render_reference(self.n_reference)
 
             if self.sample_freq and self.step % self.sample_freq == 0:
@@ -144,7 +144,7 @@ class Trainer(object):
                 elif self.model.__class__ == diffuser.models.diffusion.ActionGaussianDiffusion:
                     pass
                 else:
-                    self.render_samples()
+                    self.render_samples()"""
 
             self.step += 1
 
