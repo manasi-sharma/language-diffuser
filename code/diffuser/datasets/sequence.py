@@ -53,16 +53,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             model = getattr(models_m, cfg.model["_target_"].split(".")[-1]).load_from_checkpoint(chk.as_posix())
         else:
             model = hydra.utils.instantiate(cfg.model)
-        
-        """Creating embeddings initialization"""
-        for i, batch in enumerate(calvin_dataloader):
-            import pdb;pdb.set_trace()
-            perceptual_emb = model.perceptual_encoder(batch['rgb_obs'], batch["depth_obs"], batch["robot_obs"]) #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
-            #perceptual_emb = model.perceptual_encoder(batch['lang']['rgb_obs'], batch['lang']["depth_obs"], torch.empty((32, 32, 0))); output is torch.Size([32, 32, 64])
-
-            #2. Language embedding (condition embedding)
-            latent_goal = model.language_goal(batch["lang"]['lang']) #torch.Size([32, 384]) --> torch.Size([32, 32])
-        
+                
         #itr = sequence_dataset(env, self.preprocess_fn)
 
         # self.max_path_length
@@ -72,10 +63,22 @@ class SequenceDataset(torch.utils.data.Dataset):
         # timeouts and terminals were only applied to returns, not needed
         # infos/qpos, qvel, etc. are used for rendering (images), comment that out of training
 
-        fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
-        for i, episode in enumerate(itr):
+        """for i, episode in enumerate(itr):
             import pdb;pdb.set_trace()
             # here is where to do all the changes
+            fields.add_path(episode)"""
+
+        """Creating embeddings initialization"""
+        fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
+        for i, batch in enumerate(calvin_dataloader):
+            import pdb;pdb.set_trace()
+            episode = {}
+            perceptual_emb = model.perceptual_encoder(batch['rgb_obs'], batch["depth_obs"], batch["robot_obs"]).squeeze() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+            latent_goal = model.language_goal(batch['lang']).squeeze() #torch.Size([32, 384]) --> torch.Size([32, 32])
+            action_emb = batch['actions'].squeeze()
+            episode['observations'] = perceptual_emb
+            episode['actions'] = action_emb
+            episode['language'] = latent_goal
             fields.add_path(episode)
         fields.finalize()
 
