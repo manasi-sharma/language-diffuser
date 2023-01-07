@@ -342,6 +342,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 
 
 def wrap_main(config_name):
+    print("yooooooooooooooooo")
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def main(cfg: DictConfig) -> None:
         print(cfg)
