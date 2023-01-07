@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/iliad/u/manasis/language-diffuser/code")
+
 import argparse
 from collections import Counter, defaultdict
 import json
