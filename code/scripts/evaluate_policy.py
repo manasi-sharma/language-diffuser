@@ -134,15 +134,15 @@ class CustomModel:
             n_reference=Config.n_reference,
             train_device=Config.device,
         )
-        render_config = utils.Config(
+        """render_config = utils.Config(
             Config.renderer,
             savepath='render_config.pkl',
             env=Config.dataset,
-        )
+        )"""
         model = model_config()
         diffusion = diffusion_config(model)
-        renderer = render_config()
-        trainer = trainer_config(diffusion, dataset, renderer)
+        #renderer = render_config()
+        trainer = trainer_config(diffusion, dataset, None)
         trainer.step = state_dict['step']
         trainer.model.load_state_dict(state_dict['model'])
         trainer.ema_model.load_state_dict(state_dict['ema'])
