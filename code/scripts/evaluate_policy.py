@@ -340,14 +340,27 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
         print(colored("fail", "red"), end=" ")
     return False
 
+def Args():
+    def __init__(self):
+        self.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
+        self.train_folder = None
+        self.checkpoints = None
+        self.checkpoint = None
+        self.last_k_checkpoints =  None
+        self.custom_model = True
+        self.custom_lang_embeddings = False
+        self.debug = False
+        self.log_dir = None
+        self.device = 0 
 
 def wrap_main(config_name):
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def main(cfg: DictConfig) -> None:
         seed_everything(0, workers=True)  # type:ignore
-        
-        parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")        
-        args = parser.parse_args()
+
+        #parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")        
+        #args = parser.parse_args()
+        args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
         args.train_folder = None
         args.checkpoints = None
