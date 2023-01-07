@@ -444,6 +444,7 @@ def setup_config():
 
 if __name__ == "__main__":
     conf = setup_config()
+    print("\n\n\nconf: ", conf, "\n\n\n")
     wrap_main(conf)
 
 
