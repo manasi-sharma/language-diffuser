@@ -152,7 +152,10 @@ class CustomModel:
         pass
 
     def step(self, obs, goal):
+        import pdb;pdb.set_trace()
+        perceptual_emb = self.trainer.model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
         obs = self.dataset.normalizer.normalize(obs, 'observations')
+
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=None) #goal)
