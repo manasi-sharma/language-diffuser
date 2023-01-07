@@ -316,12 +316,15 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     # get lang annotation for subtask
     lang_annotation = val_annotations[subtask][0]
     # get language goal embedding
-    goal = lang_embeddings.get_lang_goal(lang_annotation)
+    if lang_embeddings:
+        goal = lang_embeddings.get_lang_goal(lang_annotation)
+    else:
+        goal = None
     model.reset()
     start_info = env.get_info()
 
-    plan, latent_goal = model.get_pp_plan_lang(obs, goal)
-    plans[subtask].append((plan.cpu(), latent_goal.cpu()))
+    #plan, latent_goal = model.get_pp_plan_lang(obs, goal)
+    #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
     for step in range(args.ep_len):
         action = model.step(obs, goal)
