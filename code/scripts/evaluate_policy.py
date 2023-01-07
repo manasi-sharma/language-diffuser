@@ -344,10 +344,21 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 def wrap_main(config_name):
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def main(cfg: DictConfig) -> None:
-        print(cfg)
         seed_everything(0, workers=True)  # type:ignore
         parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")
-        parser.add_argument("--dataset_path", type=str, help="Path to the dataset root directory.")
+        
+        args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
+        args.train_folder = None
+        args.checkpoints = None
+        args.checkpoint = None
+        args.last_k_checkpoints =  None
+        args.custom_model = True
+        args.custom_lang_embeddings = False
+        args.debug = False
+        args.log_dir = None
+        args.device = 0 
+
+        """parser.add_argument("--dataset_path", type=str, help="Path to the dataset root directory.")
 
         # arguments for loading default model
         parser.add_argument(
@@ -381,7 +392,8 @@ def wrap_main(config_name):
 
         parser.add_argument("--log_dir", default=None, type=str, help="Where to log the evaluation results.")
 
-        parser.add_argument("--device", default=0, type=int, help="CUDA device")
+        parser.add_argument("--device", default=0, type=int, help="CUDA device")"""
+
         args = parser.parse_args()
 
         # Do not change
