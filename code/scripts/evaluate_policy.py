@@ -345,8 +345,9 @@ def wrap_main(config_name):
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def main(cfg: DictConfig) -> None:
         seed_everything(0, workers=True)  # type:ignore
-        parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")
         
+        parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")        
+        args = parser.parse_args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
         args.train_folder = None
         args.checkpoints = None
@@ -393,8 +394,6 @@ def wrap_main(config_name):
         parser.add_argument("--log_dir", default=None, type=str, help="Where to log the evaluation results.")
 
         parser.add_argument("--device", default=0, type=int, help="CUDA device")"""
-
-        args = parser.parse_args()
 
         # Do not change
         args.ep_len = 360
