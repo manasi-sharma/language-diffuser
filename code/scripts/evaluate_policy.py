@@ -344,7 +344,6 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 def wrap_main(config_name):
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def main(cfg: DictConfig) -> None:
-        import pdb;pdb.set_trace()
         print(cfg)
         seed_everything(0, workers=True)  # type:ignore
         parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")
