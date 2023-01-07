@@ -344,6 +344,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 def wrap_main(config_name):
     @hydra.main(config_path="conf", config_name=f"{config_name}.yaml")
     def main(cfg: DictConfig) -> None:
+        print(cfg)
         seed_everything(0, workers=True)  # type:ignore
         parser = argparse.ArgumentParser(description="Evaluate a trained model on multistep sequences with language goals.")
         parser.add_argument("--dataset_path", type=str, help="Path to the dataset root directory.")
@@ -444,7 +445,4 @@ def setup_config():
 
 if __name__ == "__main__":
     conf = setup_config()
-    print("\n\n\nconf: ", conf, "\n\n\n")
     wrap_main(conf)
-
-
