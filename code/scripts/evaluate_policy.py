@@ -261,9 +261,9 @@ def print_and_save(total_results, plan_dicts, args):
 
 def evaluate_policy(model, env, lang_embeddings, args):
     conf_dir = Path(__file__).absolute().parents[2] / "conf"
-    task_cfg = OmegaConf.load(conf_dir / "callbacks/rollout/tasks/new_playtable_tasks.yaml")
+    task_cfg = OmegaConf.load("/iliad/u/manasis/language-diffuser/code/conf/callbacks/rollout/tasks/new_playtable_tasks.yaml")
     task_oracle = hydra.utils.instantiate(task_cfg)
-    val_annotations = OmegaConf.load(conf_dir / "annotations/new_playtable_validation.yaml")
+    val_annotations = OmegaConf.load("/iliad/u/manasis/language-diffuser/code/conf/annotations/new_playtable_validation.yaml")
 
     eval_sequences = get_sequences(args.num_sequences)
 
