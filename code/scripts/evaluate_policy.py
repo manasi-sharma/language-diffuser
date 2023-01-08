@@ -30,6 +30,8 @@ from config.locomotion_config import Config
 
 from diffuser.utils.arrays import to_torch, to_np, to_device
 
+import play_lmp as models_m
+
 logger = logging.getLogger(__name__)
 
 
@@ -148,12 +150,23 @@ class CustomModel:
         trainer.ema_model.load_state_dict(state_dict['ema'])
         self.trainer = trainer
 
+        # Encoding model load
+        chk = Path("/iliad/u/manasis/conditional-diffuser/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())
+        #import pdb;pdb.set_trace()
+
+        # Load Model
+        if chk is not None:
+            encoding_model = getattr(models_m, cfg.model["_target_"].split(".")[-1]).load_from_checkpoint(chk.as_posix())
+        else:
+            encoding_model = hydra.utils.instantiate(cfg.model)
+        self.encoding_model = encoding_model
+
     def reset(self):
         pass
 
     def step(self, obs, goal):
         import pdb;pdb.set_trace()
-        perceptual_emb = self.trainer.model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+        perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
         obs = self.dataset.normalizer.normalize(obs, 'observations')
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
