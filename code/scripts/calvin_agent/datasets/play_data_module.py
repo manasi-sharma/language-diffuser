@@ -89,7 +89,6 @@ class PlayDataModule(pl.LightningDataModule):
                 dataset, datasets_dir=self.training_dir, transforms=self.train_transforms
             )
             val_dataset = hydra.utils.instantiate(dataset, datasets_dir=self.val_dir, transforms=self.val_transforms)
-            import pdb;pdb.set_trace()
             if self.use_shm:
                 train_dataset.setup_shm_lookup(train_shm_lookup)
                 val_dataset.setup_shm_lookup(val_shm_lookup)
