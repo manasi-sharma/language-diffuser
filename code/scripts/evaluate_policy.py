@@ -165,7 +165,7 @@ class CustomModel:
         pass
 
     def step(self, obs, goal):
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         rgb_obs = torch.Tensor(np.expand_dims(obs['rgb_obs']['rgb_static'].transpose(2, 0, 1), (0, 1)))
         rgb_obs_dict = {'rgb_static': rgb_obs}
         robot_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15]))
@@ -180,7 +180,7 @@ class CustomModel:
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=None) #goal)
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
-        action = self.trainer.ema_model.inv_model(obs_comb)
+        action = self.trainer.ema_model.inv_model(obs_comb).squeeze()
 
         samples = to_np(samples)
         action = to_np(action)
