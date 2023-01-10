@@ -166,8 +166,14 @@ class CustomModel:
 
     def step(self, obs, goal):
         import pdb;pdb.set_trace()
-        perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
-        obs = self.dataset.normalizer.normalize(obs, 'observations')
+        rgb_obs = torch.Tensor(np.expand_dims(obs['rgb_obs']['rgb_static'].transpose(2, 0, 1), (0, 1)))
+        rgb_obs_dict = {'rgb_static': rgb_obs}
+        robot_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15]))
+        robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
+        perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
+
+        #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+        obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
