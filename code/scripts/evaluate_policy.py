@@ -181,7 +181,7 @@ class CustomModel:
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
         action = self.trainer.ema_model.inv_model(obs_comb)
-        action = action.reshape(len(action), 1)
+        action = action.reshape(len(action[0]), 1)
 
         samples = to_np(samples)
         action = to_np(action)
