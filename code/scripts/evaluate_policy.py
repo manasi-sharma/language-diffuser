@@ -182,7 +182,7 @@ class CustomModel:
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
         action = self.trainer.ema_model.inv_model(obs_comb)
         #action = action.reshape(len(action[0]), 1)
-        import pdb;pdb.set_trace()
+        action = action.squeeze()
 
         samples = to_np(samples)
         action = to_np(action)
