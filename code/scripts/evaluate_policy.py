@@ -344,6 +344,8 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
         goal = lang_embeddings.get_lang_goal(lang_annotation)
     else:
         goal = None
+
+    import pdb;pdb.set_trace()
     model.reset()
     start_info = env.get_info()
 
