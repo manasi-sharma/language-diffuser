@@ -345,6 +345,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     else:
         goal = None
 
+    #import pdb;pdb.set_trace()
     model.reset()
     start_info = env.get_info()
 
@@ -353,6 +354,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 
     for step in range(args.ep_len):
         action = model.step(obs, goal)
+        import pdb;pdb.set_trace()
         obs, _, _, current_info = env.step(action)
         if args.debug:
             img = env.render(mode="rgb_array")
