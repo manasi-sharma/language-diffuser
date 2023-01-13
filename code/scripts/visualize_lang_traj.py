@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import sys
 import time
+import matplotlib.pyplot as plt
 
 sys.path.insert(0, Path(__file__).absolute().parents[2].as_posix())
 
@@ -352,9 +353,17 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     #plan, latent_goal = model.get_pp_plan_lang(obs, goal)
     #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
+    """"Plotting"""
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    x, y, z = [], [], []
+
     for step in range(args.ep_len):
         action = model.step(obs, goal)
-        import pdb;pdb.set_trace()
+        x.append(action[0])
+        y.append(action[1])
+        z.append(action[2])
+
         obs, _, _, current_info = env.step(action)
         if args.debug:
             img = env.render(mode="rgb_array")
@@ -366,6 +375,13 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
             if args.debug:
                 print(colored("success", "green"), end=" ")
             return True
+    
+    x, y, z = np.array(x), np.array(y), np.array(z)
+    ax.plot(x,y,z)
+    plt.show()
+    plt.savefig('/iliad/u/manasis/language-diffuser/code/debug_images/rotate_blue_block_right_traj.png')
+    import pdb;pdb.set_trace()
+
     if args.debug:
         print(colored("fail", "red"), end=" ")
     return False
