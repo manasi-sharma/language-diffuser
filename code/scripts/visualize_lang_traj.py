@@ -380,7 +380,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
         x, y, z = np.array(x), np.array(y), np.array(z)
         ax.scatter(x,y,z)
         plt.show()
-        plt.savefig('/iliad/u/manasis/language-diffuser/code/debug_images/push_red_block_left.png')
+        plt.savefig('/iliad/u/manasis/language-diffuser/code/debug_images/push_red_block_right.png')
         import pdb;pdb.set_trace()
 
     if args.debug:
