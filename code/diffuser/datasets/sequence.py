@@ -120,6 +120,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             makes indices for sampling from dataset;
             each index maps to a datapoint
         '''
+        import pdb;pdb.set_trace()
         indices = []
         for i, path_length in enumerate(path_lengths):
             max_start = min(path_length - 1, self.max_path_length - horizon)
