@@ -89,7 +89,6 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['observations'] = perceptual_emb
             episode['actions'] = action_emb
             episode['language'] = latent_goal
-            import pdb;pdb.set_trace()
             fields.add_path(episode)
         fields.finalize()
 
