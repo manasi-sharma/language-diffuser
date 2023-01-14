@@ -34,7 +34,7 @@ class Config(ParamsProto):
     preprocess_fns = []
     clip_denoised = True
     use_padding = True
-    include_returns = False #CHANGED
+    include_returns = True #CHANGED
     discount = 0.99
     max_path_length = 1000
     hidden_dim = 256
