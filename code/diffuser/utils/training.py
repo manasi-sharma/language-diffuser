@@ -76,7 +76,7 @@ class Trainer(object):
 
         self.dataset = dataset
 
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         self.dataloader = cycle(torch.utils.data.DataLoader(
             self.dataset, batch_size=train_batch_size, num_workers=0, shuffle=True, pin_memory=True
         ))
@@ -113,7 +113,7 @@ class Trainer(object):
         for step in range(n_train_steps):
             for i in range(self.gradient_accumulate_every):
                 batch = next(self.dataloader)
-                import pdb;pdb.set_trace()
+                #import pdb;pdb.set_trace()
                 batch = batch_to_device(batch, device=self.device)
                 loss, infos = self.model.loss(*batch)
                 loss = loss / self.gradient_accumulate_every
