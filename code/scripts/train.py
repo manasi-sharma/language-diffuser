@@ -42,13 +42,6 @@ def main(config_name, **deps):
 
         seed_everything(cfg.seed, workers=True)  # type: ignore
 
-        """# Dataset
-        datamodule = hydra.utils.instantiate(cfg.datamodule)
-        datamodule.prepare_data()
-        datamodule.setup()
-        calvin_dataset = datamodule.train_datasets
-        #dataloader = datamodule.val_dataloader()"""
-
         dataset_config = utils.Config(
             Config.loader,
             savepath='dataset_config.pkl',
