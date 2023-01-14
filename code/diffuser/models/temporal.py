@@ -117,6 +117,7 @@ class TemporalUnet(nn.Module):
         condition_dropout=0.1,
         calc_energy=False,
         kernel_size=5,
+        returns_cond_dim=32,
     ):
         super().__init__()
 
@@ -147,7 +148,7 @@ class TemporalUnet(nn.Module):
 
         if self.returns_condition:
             self.returns_mlp = nn.Sequential(
-                        nn.Linear(1, dim),
+                        nn.Linear(returns_cond_dim, dim),
                         act_fn,
                         nn.Linear(dim, dim * 4),
                         act_fn,
