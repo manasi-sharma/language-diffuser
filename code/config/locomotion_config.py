@@ -36,7 +36,7 @@ class Config(ParamsProto):
     use_padding = True
     include_returns = True #CHANGED
     discount = 0.99
-    max_path_length = 32
+    max_path_length = 33
     hidden_dim = 256
     ar_inv = False
     train_only_inv = False
