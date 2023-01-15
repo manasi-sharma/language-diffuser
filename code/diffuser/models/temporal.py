@@ -367,7 +367,6 @@ class MLPnet(nn.Module):
                 returns_embed = mask*returns_embed
             if force_dropout:
                 returns_embed = 0*returns_embed
-            import pdb;pdb.set_trace()
             t = torch.cat([t, returns_embed], dim=-1)
 
         inp = torch.cat([t, cond, x], dim=-1)
