@@ -89,7 +89,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['observations'] = perceptual_emb
             episode['actions'] = action_emb
             episode['language'] = latent_goal
-            #import pdb;pdb.set_trace()
+            import pdb;pdb.set_trace()
             fields.add_path(episode)
         fields.finalize()
 
@@ -157,7 +157,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             returns = (discounts * rewards).sum()
             returns = np.array([returns/self.returns_scale], dtype=np.float32)"""
             returns = self.fields.language[path_ind, start:end]
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
             batch = RewardBatch(trajectories, conditions, returns)
         else:
             batch = Batch(trajectories, conditions)
