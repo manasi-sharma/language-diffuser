@@ -212,13 +212,13 @@ class TemporalUnet(nn.Module):
         if self.returns_condition:
             assert returns is not None
             returns_embed = self.returns_mlp(returns)
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
             if use_dropout:
                 mask = self.mask_dist.sample(sample_shape=(returns_embed.size(0), 1)).to(returns_embed.device)
                 returns_embed = mask*returns_embed
             if force_dropout:
                 returns_embed = 0*returns_embed
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
             t = torch.cat([t, returns_embed], dim=-1)
 
         h = []
