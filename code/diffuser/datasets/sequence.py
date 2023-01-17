@@ -161,7 +161,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             if fields_language.shape[1] != 1:
                 print("\n\nError!\n\n")
                 import pdb;pdb.set_trace()
-            returns = fields_language[path_ind]
+            returns = fields_language[path_ind, 0]
             #import pdb;pdb.set_trace()
             batch = RewardBatch(trajectories, conditions, returns)
         else:
