@@ -102,7 +102,6 @@ class SequenceDataset(torch.utils.data.Dataset):
         self.path_lengths = fields.path_lengths
         self.normalize()
 
-        import pdb;pdb.set_trace()
         print(fields)
 
         # shapes = {key: val.shape for key, val in self.fields.items()}
@@ -157,8 +156,9 @@ class SequenceDataset(torch.utils.data.Dataset):
             discounts = self.discounts[:len(rewards)]
             returns = (discounts * rewards).sum()
             returns = np.array([returns/self.returns_scale], dtype=np.float32)"""
-            returns = self.fields.language[path_ind, start:end]
-            #import pdb;pdb.set_trace()
+            fields_language = np.unique(self.fields.language, axis=1)
+            returns = self.fields.language[path_ind, start:]
+            import pdb;pdb.set_trace()
             batch = RewardBatch(trajectories, conditions, returns)
         else:
             batch = Batch(trajectories, conditions)
