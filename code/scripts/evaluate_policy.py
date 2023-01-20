@@ -450,7 +450,9 @@ def wrap_main(config_name):
         # evaluate a custom model
         if args.custom_model:
             model = CustomModel(cfg)
+            print("\n\n\nYOOOOOOOOOOOOO_1")
             env = make_env(args.dataset_path)
+            print("\nYOOOOOOOOOOOOO_2\n\n\n")
 
             # Generate lang embeddings
             train_cfg_path = Path(args.train_folder) / ".hydra/config.yaml"
