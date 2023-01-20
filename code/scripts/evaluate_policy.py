@@ -15,6 +15,7 @@ sys.path.insert(0, Path(__file__).absolute().parents[2].as_posix())
 from calvin_agent.evaluation.multistep_sequences import get_sequences
 from calvin_agent.evaluation.utils import get_default_model_and_env, get_env_state_for_initial_condition, join_vis_lang
 from calvin_agent.utils.utils import get_all_checkpoints, get_checkpoints_for_epochs, get_last_checkpoint
+from calvin_agent.utils.utils import add_text, format_sftp_path
 import hydra
 import numpy as np
 from omegaconf import OmegaConf
@@ -450,14 +451,24 @@ def wrap_main(config_name):
         if args.custom_model:
             model = CustomModel(cfg)
             env = make_env(args.dataset_path)
-            _, _, _, lang_embeddings = get_default_model_and_env(
-                    args.train_folder,
-                    args.dataset_path,
-                    checkpoint,
-                    env=env,
-                    lang_embeddings=lang_embeddings,
-                    device_id=args.device,
-                )
+
+            # Generate lang embeddings
+            train_cfg_path = Path(args.train_folder) / ".hydra/config.yaml"
+            train_cfg_path = format_sftp_path(train_cfg_path)
+            new_cfg = OmegaConf.load(train_cfg_path)
+            new_cfg = OmegaConf.create(OmegaConf.to_yaml(new_cfg).replace("calvin_models.", ""))
+            lang_folder = new_cfg.datamodule.datasets.lang_dataset.lang_folder
+            
+            new_cfg.datamodule.root_data_dir = args.dataset_path
+            new_data_module = hydra.utils.instantiate(new_cfg.datamodule, num_workers=0)
+            new_data_module.prepare_data()
+            new_data_module.setup()
+            new_dataloader = new_data_module.val_dataloader()
+            new_dataset = new_dataloader.dataset.datasets["lang"]
+            device_id = 0
+            device = torch.device(f"cuda:{device_id}")
+
+            lang_embeddings = utils.LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device=device)
             import pdb;pdb.set_trace()
             evaluate_policy(model, env, lang_embeddings, args)
         else:
