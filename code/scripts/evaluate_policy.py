@@ -457,6 +457,7 @@ def wrap_main(config_name):
             train_cfg_path = format_sftp_path(train_cfg_path)
             new_cfg = OmegaConf.load(train_cfg_path)
             new_cfg = OmegaConf.create(OmegaConf.to_yaml(new_cfg).replace("calvin_models.", ""))
+            import pdb;pdb.set_trace()
             lang_folder = new_cfg.datamodule.datasets.lang_dataset.lang_folder
             
             new_cfg.datamodule.root_data_dir = args.dataset_path
