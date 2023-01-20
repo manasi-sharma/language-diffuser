@@ -40,7 +40,7 @@ class Trainer(object):
         self,
         diffusion_model,
         dataset,
-        renderer,
+        #renderer,
         ema_decay=0.995,
         train_batch_size=32,
         train_lr=2e-5,
@@ -83,7 +83,7 @@ class Trainer(object):
         self.dataloader_vis = cycle(torch.utils.data.DataLoader(
             self.dataset, batch_size=1, num_workers=0, shuffle=True, pin_memory=True
         ))
-        self.renderer = renderer
+        #self.renderer = renderer
         self.optimizer = torch.optim.Adam(diffusion_model.parameters(), lr=train_lr)
 
         self.bucket = bucket
@@ -190,7 +190,7 @@ class Trainer(object):
     #--------------------------------- rendering ---------------------------------#
     #-----------------------------------------------------------------------------#
 
-    def render_reference(self, batch_size=10):
+    """def render_reference(self, batch_size=10):
         '''
             renders training points
         '''
@@ -332,4 +332,4 @@ class Trainer(object):
             ####
 
             savepath = os.path.join('logs/images', f'sample-{i}.png')
-            self.renderer.composite(savepath, observations)
+            self.renderer.composite(savepath, observations)"""

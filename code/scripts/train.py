@@ -58,14 +58,14 @@ def main(config_name, **deps):
             #termination_penalty=Config.termination_penalty,
         )
 
-        render_config = utils.Config(
+        """render_config = utils.Config(
             Config.renderer,
             savepath='render_config.pkl',
             env=Config.dataset,
-        )
+        )"""
 
         dataset = dataset_config()
-        renderer = render_config()
+        #renderer = render_config()
         observation_dim = dataset.observation_dim
         action_dim = dataset.action_dim
 
@@ -168,7 +168,7 @@ def main(config_name, **deps):
 
         diffusion = diffusion_config(model)
 
-        trainer = trainer_config(diffusion, dataset, renderer)
+        trainer = trainer_config(diffusion, dataset)
 
         # -----------------------------------------------------------------------------#
         # ------------------------ test forward & backward pass -----------------------#
