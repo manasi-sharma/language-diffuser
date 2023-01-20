@@ -171,6 +171,7 @@ class CustomModel:
         robot_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15]))
         robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
         perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
+        import pdb;pdb.set_trace()
         latent_goal = self.encoding_model.language_goal(goal).detach().numpy()
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
         obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
@@ -449,6 +450,15 @@ def wrap_main(config_name):
         if args.custom_model:
             model = CustomModel(cfg)
             env = make_env(args.dataset_path)
+            _, _, _, lang_embeddings = get_default_model_and_env(
+                    args.train_folder,
+                    args.dataset_path,
+                    checkpoint,
+                    env=env,
+                    lang_embeddings=lang_embeddings,
+                    device_id=args.device,
+                )
+            import pdb;pdb.set_trace()
             evaluate_policy(model, env, lang_embeddings, args)
         else:
             assert "train_folder" in args
