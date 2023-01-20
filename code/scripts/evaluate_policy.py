@@ -144,7 +144,7 @@ class CustomModel:
         model = model_config()
         diffusion = diffusion_config(model)
         #renderer = render_config()
-        trainer = trainer_config(diffusion, dataset, None)
+        trainer = trainer_config(diffusion, dataset)
         trainer.step = state_dict['step']
         trainer.model.load_state_dict(state_dict['model'])
         trainer.ema_model.load_state_dict(state_dict['ema'])
@@ -178,6 +178,7 @@ class CustomModel:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
+        import pdb;pdb.set_trace()
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
         action = self.trainer.ema_model.inv_model(obs_comb)
