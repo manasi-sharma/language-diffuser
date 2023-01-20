@@ -475,7 +475,7 @@ def wrap_main(config_name):
             import pdb;pdb.set_trace()
             evaluate_policy(model, env, lang_embeddings, args)
         else:
-            assert "train_folder" in args
+            #assert "train_folder" in args
 
             checkpoints = []
             if args.checkpoints is None and args.last_k_checkpoints is None and args.checkpoint is None:
