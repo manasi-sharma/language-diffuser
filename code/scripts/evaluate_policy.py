@@ -449,8 +449,9 @@ def wrap_main(config_name):
 
         # evaluate a custom model
         if args.custom_model:
+            print("\n\n\nYOOOOOOOOOOOOO_0")
             model = CustomModel(cfg)
-            print("\n\n\nYOOOOOOOOOOOOO_1")
+            print("\nYOOOOOOOOOOOOO_1")
             env = make_env(args.dataset_path)
             print("\nYOOOOOOOOOOOOO_2\n\n\n")
 
