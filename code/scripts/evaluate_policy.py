@@ -178,7 +178,8 @@ class CustomModel:
         robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
         perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
         import pdb;pdb.set_trace()
-        latent_goal = self.encoding_model.language_goal(goal['lang']).detach().numpy()
+        latent_goal = self.encoding_model.language_goal(goal['lang'])
+        latent_goal = to_torch(latent_goal, device=device)
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
         obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
 
