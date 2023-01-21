@@ -16,6 +16,7 @@ sys.path.insert(0, Path(__file__).absolute().parents[2].as_posix())
 from calvin_agent.evaluation.multistep_sequences import get_sequences
 from calvin_agent.evaluation.utils import get_default_model_and_env, get_env_state_for_initial_condition, join_vis_lang
 from calvin_agent.utils.utils import get_all_checkpoints, get_checkpoints_for_epochs, get_last_checkpoint
+from calvin_agent.utils.utils import add_text, format_sftp_path
 import hydra
 import numpy as np
 from omegaconf import OmegaConf
@@ -30,6 +31,8 @@ import diffuser.utils as utils
 from config.locomotion_config import Config
 
 from diffuser.utils.arrays import to_torch, to_np, to_device
+
+from calvin_agent.evaluation.utils import LangEmbeddings
 
 import play_lmp as models_m
 
@@ -145,7 +148,7 @@ class CustomModel:
         model = model_config()
         diffusion = diffusion_config(model)
         #renderer = render_config()
-        trainer = trainer_config(diffusion, dataset, None)
+        trainer = trainer_config(diffusion, dataset)
         trainer.step = state_dict['step']
         trainer.model.load_state_dict(state_dict['model'])
         trainer.ema_model.load_state_dict(state_dict['ema'])
@@ -172,13 +175,13 @@ class CustomModel:
         robot_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15]))
         robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
         perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
-
+        latent_goal = self.encoding_model.language_goal(goal['lang']).detach().numpy()
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
         obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
-        samples = self.trainer.ema_model.conditional_sample(conditions, returns=None) #goal)
+        samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
         action = self.trainer.ema_model.inv_model(obs_comb)
@@ -390,7 +393,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 class Args:
     def __init__(self):
         self.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        self.train_folder = None
+        self.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-19/21-49-58/'
         self.checkpoints = None
         self.checkpoint = None
         self.last_k_checkpoints =  None
@@ -467,6 +470,26 @@ def wrap_main(config_name):
         if args.custom_model:
             model = CustomModel(cfg)
             env = make_env(args.dataset_path)
+
+            # Generate lang embeddings
+            train_cfg_path = Path(args.train_folder) / ".hydra/config.yaml"
+            train_cfg_path = format_sftp_path(train_cfg_path)
+            new_cfg = OmegaConf.load(train_cfg_path)
+            new_cfg = OmegaConf.create(OmegaConf.to_yaml(new_cfg).replace("calvin_models.", ""))
+            #import pdb;pdb.set_trace()
+            lang_folder = new_cfg.datamodule.datasets.lang_dataset.lang_folder
+            
+            new_cfg.datamodule.root_data_dir = args.dataset_path
+            new_data_module = hydra.utils.instantiate(new_cfg.datamodule, num_workers=0)
+            new_data_module.prepare_data()
+            new_data_module.setup()
+            new_dataloader = new_data_module.val_dataloader()
+            new_dataset = new_dataloader.dataset.datasets["lang"]
+            device_id = 0
+            device = torch.device(f"cuda:{device_id}")
+
+            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder)
+
             evaluate_policy(model, env, lang_embeddings, args)
         else:
             assert "train_folder" in args

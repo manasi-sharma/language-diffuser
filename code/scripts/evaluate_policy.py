@@ -178,7 +178,7 @@ class CustomModel:
         robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
         perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
         import pdb;pdb.set_trace()
-        latent_goal = self.encoding_model.language_goal(goal).detach().numpy()
+        latent_goal = self.encoding_model.language_goal(goal['lang']).detach().numpy()
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
         obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
 
@@ -462,7 +462,7 @@ def wrap_main(config_name):
             train_cfg_path = format_sftp_path(train_cfg_path)
             new_cfg = OmegaConf.load(train_cfg_path)
             new_cfg = OmegaConf.create(OmegaConf.to_yaml(new_cfg).replace("calvin_models.", ""))
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
             lang_folder = new_cfg.datamodule.datasets.lang_dataset.lang_folder
             
             new_cfg.datamodule.root_data_dir = args.dataset_path
@@ -472,10 +472,9 @@ def wrap_main(config_name):
             new_dataloader = new_data_module.val_dataloader()
             new_dataset = new_dataloader.dataset.datasets["lang"]
             device_id = 0
-            device = torch.device(f"cuda:{device_id}")
+            device = torch.device("cpu") #torch.device(f"cuda:{device_id}")
 
-            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device=device)
-            import pdb;pdb.set_trace()
+            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder)
             evaluate_policy(model, env, lang_embeddings, args)
         else:
             #assert "train_folder" in args
