@@ -393,7 +393,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset/training/'
+        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-19/21-49-58/'
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
