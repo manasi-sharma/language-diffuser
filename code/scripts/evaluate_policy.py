@@ -474,7 +474,7 @@ def wrap_main(config_name):
             device_id = 0
             device = torch.device("cpu") #torch.device(f"cuda:{device_id}")
 
-            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder)
+            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device)
             evaluate_policy(model, env, lang_embeddings, args)
         else:
             #assert "train_folder" in args
