@@ -79,7 +79,9 @@ class CustomModel:
             #discount=Config.discount,
             #termination_penalty=Config.termination_penalty,
         )
+        print("\n\n\nYOOOOOOOOOOOOO_0")
         dataset = dataset_config()
+        print("\n\n\nYOOOOOOOOOOOOO_1")
         self.dataset = dataset
 
         observation_dim = dataset.observation_dim
@@ -149,7 +151,7 @@ class CustomModel:
         #renderer = render_config()
         trainer = trainer_config(diffusion, dataset)
         trainer.step = state_dict['step']
-        print("\n\n\nYOOOOOOOOOOOOO_0")
+        print("\n\n\nYOOOOOOOOOOOOO_2")
         trainer.model.load_state_dict(state_dict['model'])
         trainer.ema_model.load_state_dict(state_dict['ema'])
         self.trainer = trainer
