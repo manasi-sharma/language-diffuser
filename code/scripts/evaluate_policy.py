@@ -397,7 +397,7 @@ def wrap_main(config_name):
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
-        args.custom_model = False
+        args.custom_model = True
         args.custom_lang_embeddings = False
         args.debug = False
         args.log_dir = None
