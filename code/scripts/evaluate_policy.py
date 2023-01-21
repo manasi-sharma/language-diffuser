@@ -33,6 +33,8 @@ from diffuser.utils.arrays import to_torch, to_np, to_device
 
 import play_lmp as models_m
 
+from calvin_agent.evaluation.utils import LangEmbeddings
+
 logger = logging.getLogger(__name__)
 
 
@@ -147,6 +149,7 @@ class CustomModel:
         #renderer = render_config()
         trainer = trainer_config(diffusion, dataset)
         trainer.step = state_dict['step']
+        print("\n\n\nYOOOOOOOOOOOOO_0")
         trainer.model.load_state_dict(state_dict['model'])
         trainer.ema_model.load_state_dict(state_dict['ema'])
         self.trainer = trainer
@@ -449,11 +452,8 @@ def wrap_main(config_name):
 
         # evaluate a custom model
         if args.custom_model:
-            print("\n\n\nYOOOOOOOOOOOOO_0")
             model = CustomModel(cfg)
-            print("\nYOOOOOOOOOOOOO_1")
             env = make_env(args.dataset_path)
-            print("\nYOOOOOOOOOOOOO_2\n\n\n")
 
             # Generate lang embeddings
             train_cfg_path = Path(args.train_folder) / ".hydra/config.yaml"
@@ -472,7 +472,7 @@ def wrap_main(config_name):
             device_id = 0
             device = torch.device(f"cuda:{device_id}")
 
-            lang_embeddings = utils.LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device=device)
+            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device=device)
             import pdb;pdb.set_trace()
             evaluate_policy(model, env, lang_embeddings, args)
         else:
