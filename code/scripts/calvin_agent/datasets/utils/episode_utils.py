@@ -35,15 +35,11 @@ def process_state(
         if state_ob in transforms:
             state_tensor_normalized = transforms[state_ob](state_tensor)
             state_obs_list_normalized.append(state_tensor_normalized)
-            print("\n\n\nnormalized tensor: ", state_tensor_normalized.shape)
         else:
             state_obs_list_normalized.append(state_tensor)
         state_obs_list_unnormalized.append(state_tensor)
-        print("unnormalized tensor: ", state_tensor.shape, "\n\n\n")
     seq_state_obs = torch.cat(state_obs_list_normalized, dim=1)
-    print("appended normalized: ", seq_state_obs.shape)
     seq_state_obs_unnormalized = torch.cat(state_obs_list_unnormalized, dim=1)
-    print("appended unnnormalized: ", seq_state_obs_unnormalized.shape, "\n\n\n")    
 
     if not proprio_state.normalize_robot_orientation and "robot_orientation_idx" in proprio_state:
         seq_state_obs[:, slice(*proprio_state.robot_orientation_idx)] = seq_state_obs_unnormalized[
@@ -54,12 +50,15 @@ def process_state(
         seq_state_obs = seq_state_obs_unnormalized
 
     # slice the specified parts of the proprioception state
+    print("\n\n\nOGGGG Seq state: ", seq_state_obs.shape)
     state_obs_sliced = []
     for slice_ids in proprio_state.keep_indices:
         seq_state_obs_ = seq_state_obs[:, slice(*slice_ids)]
+        print("\n intermediate state: ", seq_state_obs_.shape)
         state_obs_sliced.append(seq_state_obs_)
+    
+    print("\n\n\nUpdateddd state: ", seq_state_obs.shape)
     seq_state_obs = torch.cat(state_obs_sliced, dim=1)
-
     return {"robot_obs": seq_state_obs}
 
 
