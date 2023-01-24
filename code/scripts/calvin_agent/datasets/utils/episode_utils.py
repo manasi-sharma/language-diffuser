@@ -57,7 +57,7 @@ def process_state(
         print("\nintermediate state: ", seq_state_obs_.shape)
         print("\nintermediate slice_ids: ", slice_ids)
         state_obs_sliced.append(seq_state_obs_)
-    
+    state_obs_sliced.append()
     seq_state_obs = torch.cat(state_obs_sliced, dim=1)
     print("\n\n\nlen: ", len(state_obs_sliced))
     print("\n\n\nUpdateddd state: ", seq_state_obs.shape)
