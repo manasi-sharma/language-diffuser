@@ -59,7 +59,7 @@ def process_state(
         state_obs_sliced.append(seq_state_obs_)
     
     seq_state_obs = torch.cat(state_obs_sliced, dim=1)
-    print("\n\n\nlen: ", state_obs_sliced)
+    print("\n\n\nlen: ", len(state_obs_sliced))
     print("\n\n\nUpdateddd state: ", seq_state_obs.shape)
     return {"robot_obs": seq_state_obs}
 
