@@ -130,7 +130,7 @@ class BaseDataset(Dataset):
         Returns:
             dict: Dictionary of tensors of loaded sequence with different input modalities and actions.
         """
-
+        import pdb;pdb.set_trace()
         episode = self._load_episode(idx, window_size)
 
         seq_state_obs = process_state(episode, self.observation_space, self.transforms, self.proprio_state)
@@ -140,7 +140,6 @@ class BaseDataset(Dataset):
         info = get_state_info_dict(episode)
         seq_lang = process_language(episode, self.transforms, self.with_lang)
         info = self._add_language_info(info, idx)
-        import pdb;pdb.set_trace()
         seq_dict = {**seq_state_obs, **seq_rgb_obs, **seq_depth_obs, **seq_acts, **info, **seq_lang}  # type:ignore
         seq_dict["idx"] = idx  # type:ignore
 
