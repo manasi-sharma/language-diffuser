@@ -140,8 +140,8 @@ class BaseDataset(Dataset):
         info = get_state_info_dict(episode)
         seq_lang = process_language(episode, self.transforms, self.with_lang)
         info = self._add_language_info(info, idx)
+        import pdb;pdb.set_trace()
         seq_dict = {**seq_state_obs, **seq_rgb_obs, **seq_depth_obs, **seq_acts, **info, **seq_lang}  # type:ignore
-        #import pdb;pdb.set_trace()
         seq_dict["idx"] = idx  # type:ignore
 
         return seq_dict
