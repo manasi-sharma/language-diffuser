@@ -19,6 +19,7 @@ def process_state(
     seq_idx: int = 0,
     window_size: int = 0,
 ) -> Dict[str, torch.Tensor]:
+    import pdb;pdb.set_trace()
     state_obs_keys = observation_space["state_obs"]
     state_obs_list_normalized = []
     state_obs_list_unnormalized = []
