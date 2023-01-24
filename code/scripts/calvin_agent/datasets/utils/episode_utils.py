@@ -36,11 +36,15 @@ def process_state(
         if state_ob in transforms:
             state_tensor_normalized = transforms[state_ob](state_tensor)
             state_obs_list_normalized.append(state_tensor_normalized)
+            print("\n\n\nnormalized tensor: ", state_tensor_normalized.shape)
         else:
             state_obs_list_normalized.append(state_tensor)
         state_obs_list_unnormalized.append(state_tensor)
+        print("unnormalized tensor: ", state_tensor.shape, "\n\n\n")
     seq_state_obs = torch.cat(state_obs_list_normalized, dim=1)
+    print("appended normalized: ", seq_state_obs.shape)
     seq_state_obs_unnormalized = torch.cat(state_obs_list_unnormalized, dim=1)
+    print("appended unnnormalized: ", seq_state_obs_unnormalized.shape, "\n\n\n")    
 
     if not proprio_state.normalize_robot_orientation and "robot_orientation_idx" in proprio_state:
         seq_state_obs[:, slice(*proprio_state.robot_orientation_idx)] = seq_state_obs_unnormalized[
