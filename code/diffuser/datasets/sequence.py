@@ -84,6 +84,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             
             #perceptual_emb = model.perceptual_encoder(batch_obj['rgb_obs'], batch_obj["depth_obs"], batch_obj["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
             b, h, d = batch_obj["robot_obs"].shape
+            import pdb;pdb.set_trace()
             perceptual_emb = model.perceptual_encoder(np.empty((b, h, 0)), batch_obj["depth_obs"], np.concatenate( (batch_obj["robot_obs"], batch_obj["state_obs"]), axis=2 ) ).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
 
             latent_goal = model.language_goal(batch_obj['lang']).detach().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
