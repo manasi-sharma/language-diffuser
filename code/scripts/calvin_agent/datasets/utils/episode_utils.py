@@ -54,11 +54,13 @@ def process_state(
     state_obs_sliced = []
     for slice_ids in proprio_state.keep_indices:
         seq_state_obs_ = seq_state_obs[:, slice(*slice_ids)]
-        print("\n intermediate state: ", seq_state_obs_.shape)
+        print("\nintermediate state: ", seq_state_obs_.shape)
+        print("\nintermediate slice_ids: ", slice_ids.shape)
         state_obs_sliced.append(seq_state_obs_)
     
-    print("\n\n\nUpdateddd state: ", seq_state_obs.shape)
     seq_state_obs = torch.cat(state_obs_sliced, dim=1)
+    print("\n\n\nlen: ", state_obs_sliced)
+    print("\n\n\nUpdateddd state: ", seq_state_obs.shape)
     return {"robot_obs": seq_state_obs}
 
 
