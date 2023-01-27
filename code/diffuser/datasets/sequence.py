@@ -25,9 +25,12 @@ class SequenceDataset(torch.utils.data.Dataset):
         horizon=64,
         normalizer='LimitsNormalizer', #preprocess_fns=[], 
         max_path_length=1000,
-        max_n_episodes=10000, #termination_penalty=0, 
+        #max_n_episodes=10000, #termination_penalty=0, 
+        max_n_episodes=1013111, #termination_penalty=0, 
         use_padding=True, #discount=0.99, returns_scale=1000, 
         include_returns=False):
+
+        print("\n\n\n\n\n\n\nYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\n")
 
         #self.preprocess_fn = get_preprocess_fn(preprocess_fns, env)
         #self.env = env = load_environment(env)

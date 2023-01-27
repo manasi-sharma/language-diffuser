@@ -61,7 +61,8 @@ def get_log_dir(log_dir):
 
 class CustomModel:
     def __init__(self, cfg):
-        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
+        #state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
+        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state_debug_dataset_5epochs.pt',
                                 map_location=Config.device)
 
         dataset_config = utils.Config(
@@ -176,7 +177,8 @@ class CustomModel:
         rgb_obs_dict = {'rgb_static': rgb_obs}
         robot_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15]))
         robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
-        perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
+        #perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
+        perceptual_emb = self.encoding_model.perceptual_encoder.proprio_encoder(robot_obs).squeeze()
         #import pdb;pdb.set_trace()
         latent_goal = self.encoding_model.language_goal(goal['lang'])
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
@@ -399,7 +401,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-19/21-49-58/'
+        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/'
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
@@ -476,6 +478,7 @@ def wrap_main(config_name):
             device = torch.device("cpu") #torch.device(f"cuda:{device_id}")
 
             lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device)
+            #import pdb;pdb.set_trace()
             evaluate_policy(model, env, lang_embeddings, args)
         else:
             #assert "train_folder" in args
