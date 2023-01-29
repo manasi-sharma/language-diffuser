@@ -178,7 +178,7 @@ class CustomModel:
         news_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15], obs["scene_obs"]))
         new_obs = torch.Tensor(news_obs.reshape(1, 1, len(news_obs)))
         #perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         perceptual_emb = self.encoding_model.perceptual_encoder.proprio_encoder(new_obs).squeeze(0)
         latent_goal = self.encoding_model.language_goal(goal['lang'])
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
