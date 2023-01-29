@@ -409,7 +409,7 @@ def wrap_main(config_name):
         args.custom_model = True
         args.custom_lang_embeddings = False
         args.debug = False
-        args.log_dir = None
+        args.log_dir = '/iliad/u/manasis/language-diffuser/code/logs/evaluation'
         args.device = 0 
 
         """parser.add_argument("--dataset_path", type=str, help="Path to the dataset root directory.")
