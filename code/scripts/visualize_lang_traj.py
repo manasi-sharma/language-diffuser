@@ -379,11 +379,12 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
                 print(colored("success", "green"), end=" ")
             return True
     
-    if subtask == 'push_red_block_right':
+    if True: #subtask == 'push_red_block_right':
+        print("\n\n\nSUBTASK: ", subtask, "\n\n\n")
         x, y, z = np.array(x), np.array(y), np.array(z)
         ax.scatter(x,y,z)
         plt.show()
-        plt.savefig('/iliad/u/manasis/language-diffuser/code/debug_images/push_red_block_right.png')
+        plt.savefig('/iliad/u/manasis/language-diffuser/code/debug_images/img_test.png')
         import pdb;pdb.set_trace()
 
     if args.debug:
