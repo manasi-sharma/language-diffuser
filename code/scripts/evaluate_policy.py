@@ -226,6 +226,38 @@ def count_success(results):
         step_success.append(sr)
     return step_success
 
+def print_(total_results, plan_dicts, args):
+    log_dir = get_log_dir(args.log_dir)
+
+    sequences = get_sequences(args.num_sequences)
+
+    current_data = {}
+    ranking = {}
+    for results in total_results:
+        print(f"\n\n\nResults:")
+        avg_seq_len = np.mean(results)
+        chain_sr = {i + 1: sr for i, sr in enumerate(count_success(results))}
+        print(f"Average successful sequence length: {avg_seq_len}")
+        print("Success rates for i instructions in a row:")
+        for i, sr in chain_sr.items():
+            print(f"{i}: {sr * 100:.1f}%")
+
+        cnt_success = Counter()
+        cnt_fail = Counter()
+
+        for result, (_, sequence) in zip(results, sequences):
+            for successful_tasks in sequence[:result]:
+                cnt_success[successful_tasks] += 1
+            if result < len(sequence):
+                failed_task = sequence[result]
+                cnt_fail[failed_task] += 1
+
+        total = cnt_success + cnt_fail
+        task_info = {}
+        for task in total:
+            task_info[task] = {"success": cnt_success[task], "total": total[task]}
+            print(f"{task}: {cnt_success[task]} / {total[task]} |  SR: {cnt_success[task] / total[task] * 100:.1f}%")    
+
 
 def print_and_save(total_results, plan_dicts, args):
     log_dir = get_log_dir(args.log_dir)
@@ -481,7 +513,7 @@ def wrap_main(config_name):
             lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device)
             #import pdb;pdb.set_trace()
             result, plan = evaluate_policy(model, env, lang_embeddings, args)
-            print_and_save(result, plan, args)
+            print_(result, plan, args)
         else:
             #assert "train_folder" in args
 
