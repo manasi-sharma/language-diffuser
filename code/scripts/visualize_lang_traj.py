@@ -393,7 +393,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 class Args:
     def __init__(self):
         self.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        self.train_folder = None #'/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/'
+        self.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/' #None
         self.checkpoints = None
         self.checkpoint = None
         self.last_k_checkpoints =  None
@@ -412,7 +412,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = None #'/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/'
+        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/' #None
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
