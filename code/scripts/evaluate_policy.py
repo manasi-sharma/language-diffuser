@@ -233,7 +233,7 @@ def print_(total_results, plan_dicts, args):
 
     current_data = {}
     ranking = {}
-    for results in total_results:
+    for results in [total_results]:
         print(f"\n\n\nResults:")
         avg_seq_len = np.mean(results)
         chain_sr = {i + 1: sr for i, sr in enumerate(count_success(results))}
