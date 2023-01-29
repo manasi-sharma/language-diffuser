@@ -480,7 +480,8 @@ def wrap_main(config_name):
 
             lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device)
             #import pdb;pdb.set_trace()
-            evaluate_policy(model, env, lang_embeddings, args)
+            result, plan = evaluate_policy(model, env, lang_embeddings, args)
+            print_and_save(result, plan, args)
         else:
             #assert "train_folder" in args
 
