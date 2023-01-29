@@ -317,6 +317,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
             eval_sequences.set_description(
                 " ".join([f"{i + 1}/5 : {v * 100:.1f}% |" for i, v in enumerate(count_success(results))]) + "|"
             )
+        break
 
     return results, plans
 
