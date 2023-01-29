@@ -340,7 +340,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
     if not args.debug:
         eval_sequences = tqdm(eval_sequences, position=0, leave=True)
 
-    for initial_state, eval_sequence in eval_sequences:
+    for i, initial_state, eval_sequence in enumerate(eval_sequences):
         result = evaluate_sequence(
             env, model, task_oracle, initial_state, eval_sequence, lang_embeddings, val_annotations, args, plans
         )
@@ -349,7 +349,8 @@ def evaluate_policy(model, env, lang_embeddings, args):
             eval_sequences.set_description(
                 " ".join([f"{i + 1}/5 : {v * 100:.1f}% |" for i, v in enumerate(count_success(results))]) + "|"
             )
-        break
+        if i == 5:
+            break
 
     return results, plans
 
