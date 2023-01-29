@@ -172,15 +172,15 @@ class CustomModel:
         #import pdb;pdb.set_trace()
         rgb_obs = torch.Tensor(np.expand_dims(obs['rgb_obs']['rgb_static'].transpose(2, 0, 1), (0, 1)))
         rgb_obs_dict = {'rgb_static': rgb_obs}
-        robot_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15]))
-        robot_obs = torch.Tensor(robot_obs.reshape(1, 1, len(robot_obs)))
-        perceptual_emb = self.encoding_model.perceptual_encoder(rgb_obs_dict, {}, robot_obs).squeeze(0).detach().numpy()
-        latent_goal = self.encoding_model.language_goal(goal['lang']).detach().numpy()
-        #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+        news_obs = np.concatenate((obs["robot_obs"][:7], obs["robot_obs"][14:15], obs["scene_obs"]))
+        new_obs = torch.Tensor(news_obs.reshape(1, 1, len(news_obs)))
+        perceptual_emb = self.encoding_model.perceptual_encoder.proprio_encoder(new_obs).squeeze(0)
+        latent_goal = self.encoding_model.language_goal(goal['lang'])
         obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
+        latent_goal = to_torch(latent_goal, device=device)
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
@@ -393,7 +393,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
 class Args:
     def __init__(self):
         self.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        self.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-19/21-49-58/'
+        self.train_folder = None #'/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/'
         self.checkpoints = None
         self.checkpoint = None
         self.last_k_checkpoints =  None
@@ -412,7 +412,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = None
+        args.train_folder = None #'/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/'
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
@@ -486,13 +486,13 @@ def wrap_main(config_name):
             new_dataloader = new_data_module.val_dataloader()
             new_dataset = new_dataloader.dataset.datasets["lang"]
             device_id = 0
-            device = torch.device(f"cuda:{device_id}")
+            device = torch.device("cpu") #device = torch.device(f"cuda:{device_id}")
 
-            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder)
+            lang_embeddings = LangEmbeddings(new_dataset.abs_datasets_dir, lang_folder, device)
 
             evaluate_policy(model, env, lang_embeddings, args)
         else:
-            assert "train_folder" in args
+            #assert "train_folder" in args
 
             checkpoints = []
             if args.checkpoints is None and args.last_k_checkpoints is None and args.checkpoint is None:
