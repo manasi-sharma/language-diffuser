@@ -86,7 +86,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             #import pdb;pdb.set_trace()
             
             #perceptual_emb = model.perceptual_encoder(batch_obj['rgb_obs'], batch_obj["depth_obs"], batch_obj["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([1, 32, 72])
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0) # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             #import pdb;pdb.set_trace()
             # try both robot_obs (15,) & partial (8,)
