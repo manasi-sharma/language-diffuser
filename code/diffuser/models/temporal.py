@@ -202,7 +202,6 @@ class TemporalUnet(nn.Module):
             x : [ batch x horizon x transition ]
             returns : [batch x horizon]
         '''
-        import pdb;pdb.set_trace()
 
         if self.calc_energy:
             x_inp = x
