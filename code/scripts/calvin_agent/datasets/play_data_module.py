@@ -101,7 +101,7 @@ class PlayDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         t_dl = {
             key: DataLoader(
-                dataset.to(torch.device("cuda:0")),
+                dataset.data.to(torch.device("cuda:0")),
                 batch_size=1,
                 num_workers=self.num_workers,
                 pin_memory=False,
@@ -113,7 +113,7 @@ class PlayDataModule(pl.LightningDataModule):
     def val_dataloader(self):
         val_dataloaders = {
             key: DataLoader(
-                dataset.to(torch.device("cuda:0")),
+                dataset.data.to(torch.device("cuda:0")),
                 batch_size=1,
                 num_workers=self.num_workers,
                 pin_memory=False,
