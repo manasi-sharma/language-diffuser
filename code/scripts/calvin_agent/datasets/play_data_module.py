@@ -12,6 +12,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.trainer.supporters import CombinedLoader
 from torch.utils.data import DataLoader
 import torchvision
+import torch
 
 logger = logging.getLogger(__name__)
 DEFAULT_TRANSFORM = OmegaConf.create({"train": None, "val": None})
@@ -100,7 +101,7 @@ class PlayDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         t_dl = {
             key: DataLoader(
-                dataset,
+                dataset.to(torch.device("cuda:0")),
                 batch_size=1,
                 num_workers=self.num_workers,
                 pin_memory=False,
@@ -112,7 +113,7 @@ class PlayDataModule(pl.LightningDataModule):
     def val_dataloader(self):
         val_dataloaders = {
             key: DataLoader(
-                dataset,
+                dataset.to(torch.device("cuda:0")),
                 batch_size=1,
                 num_workers=self.num_workers,
                 pin_memory=False,

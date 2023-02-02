@@ -19,26 +19,20 @@ ValueBatch = namedtuple('ValueBatch', 'trajectories conditions values')
 
 class SequenceDataset(torch.utils.data.Dataset):
 
-    def __init__(self, #env='hopper-medium-replay',
+    def __init__(self,
         cfg=None,
         train_flag=True,
         horizon=64,
-        normalizer='LimitsNormalizer', #preprocess_fns=[], 
+        normalizer='LimitsNormalizer',
         max_path_length=1000,
-        #max_n_episodes=10000, #termination_penalty=0, 
-        max_n_episodes=1013111, #termination_penalty=0, 
-        use_padding=True, #discount=0.99, returns_scale=1000, 
+        max_n_episodes=1013111,
+        use_padding=True, 
         include_returns=False):
 
         print("\n\n\n\n\n\n\nYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\n")
 
-        #self.preprocess_fn = get_preprocess_fn(preprocess_fns, env)
-        #self.env = env = load_environment(env)
-        #self.returns_scale = returns_scale
         self.horizon = horizon
         self.max_path_length = max_path_length
-        #self.discount = discount
-        #self.discounts = self.discount ** np.arange(self.max_path_length)[:, None]
         self.use_padding = use_padding
         self.include_returns = include_returns
         
@@ -53,27 +47,13 @@ class SequenceDataset(torch.utils.data.Dataset):
 
         """Model initialization"""
         chk = Path("/iliad/u/manasis/conditional-diffuser/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())
-        #import pdb;pdb.set_trace()
 
         # Load Model
         if chk is not None:
             model = getattr(models_m, cfg.model["_target_"].split(".")[-1]).load_from_checkpoint(chk.as_posix())
         else:
             model = hydra.utils.instantiate(cfg.model)
-                
-        #itr = sequence_dataset(env, self.preprocess_fn)
-
-        # self.max_path_length
-        # max_n_episodes = 10000
-        # env and preprocess_fn are not needed
-        # in episode, 'next_observation' is not needed as no preprocess_fn is being applied
-        # timeouts and terminals were only applied to returns, not needed
-        # infos/qpos, qvel, etc. are used for rendering (images), comment that out of training
-
-        """for i, episode in enumerate(itr):
-            import pdb;pdb.set_trace()
-            # here is where to do all the changes
-            fields.add_path(episode)"""
+        model = model.to(torch.device('cuda:0'))
 
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
@@ -83,17 +63,10 @@ class SequenceDataset(torch.utils.data.Dataset):
                 batch_obj = batch
             else:
                 batch_obj = batch['lang']
-            #import pdb;pdb.set_trace()
-            
-            #perceptual_emb = model.perceptual_encoder(batch_obj['rgb_obs'], batch_obj["depth_obs"], batch_obj["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([1, 32, 72])
-            #import pdb;pdb.set_trace()
+                
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0) # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
-            #import pdb;pdb.set_trace()
-            # try both robot_obs (15,) & partial (8,)
-
             latent_goal = model.language_goal(batch_obj['lang']).detach().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
             len_hor = len(perceptual_emb)
-            #latent_goal = np.tile(latent_goal, (len_hor, 1))
             action_emb = batch_obj['actions'].squeeze().detach().numpy()
             episode['observations'] = perceptual_emb
             episode['actions'] = action_emb
