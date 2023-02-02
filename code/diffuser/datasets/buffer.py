@@ -10,7 +10,7 @@ class ReplayBuffer:
 
     def __init__(self, max_n_episodes, max_path_length): #, termination_penalty):
         self._dict = {
-            'path_lengths': torch.zeros(max_n_episodes, dtype=int, device = torch.device('cuda:0')),
+            'path_lengths': torch.zeros(max_n_episodes, dtype=int),
         }
         self._count = 0
         self.max_n_episodes = max_n_episodes
@@ -57,10 +57,10 @@ class ReplayBuffer:
 
     def _allocate(self, key, array):
         assert key not in self._dict
-        #import pdb;pdb.set_trace()
         dim = array.shape[-1]
         shape = (self.max_n_episodes, self.max_path_length, dim)
-        self._dict[key] = torch.zeros(shape, dtype=float, device = torch.device('cuda:0')) #np.zeros(shape, dtype=np.float32)
+        #self._dict[key] = torch.zeros(shape, dtype=float, device = torch.device('cuda:0'))
+        self._dict[key] = np.zeros(shape, dtype=np.float32)
         # print(f'[ utils/mujoco ] Allocated {key} with size {shape}')
 
     def add_path(self, path):
