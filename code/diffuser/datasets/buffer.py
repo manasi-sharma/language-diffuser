@@ -60,7 +60,7 @@ class ReplayBuffer:
         #import pdb;pdb.set_trace()
         dim = array.shape[-1]
         shape = (self.max_n_episodes, self.max_path_length, dim)
-        self._dict[key] = np.zeros(shape, dtype=float, device = torch.device('cuda:0')) #np.zeros(shape, dtype=np.float32)
+        self._dict[key] = torch.zeros(shape, dtype=float, device = torch.device('cuda:0')) #np.zeros(shape, dtype=np.float32)
         # print(f'[ utils/mujoco ] Allocated {key} with size {shape}')
 
     def add_path(self, path):
