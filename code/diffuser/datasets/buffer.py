@@ -49,7 +49,6 @@ class ReplayBuffer:
             instead of `buffer['observations']`
         '''
         for key, val in self._dict.items():
-            import pdb;pdb.set_trace()
             setattr(self, key, val)
 
     def items(self):
@@ -58,6 +57,7 @@ class ReplayBuffer:
 
     def _allocate(self, key, array):
         assert key not in self._dict
+        import pdb;pdb.set_trace()
         dim = array.shape[-1]
         shape = (self.max_n_episodes, self.max_path_length, dim)
         self._dict[key] = np.zeros(shape, dtype=np.float32)
