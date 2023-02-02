@@ -10,7 +10,7 @@ class ReplayBuffer:
 
     def __init__(self, max_n_episodes, max_path_length): #, termination_penalty):
         self._dict = {
-            'path_lengths': torch.zeros(max_n_episodes, dtype=int),
+            'path_lengths': torch.zeros(max_n_episodes, dtype=int, device = torch.device('cuda:0')),
         }
         self._count = 0
         self.max_n_episodes = max_n_episodes
