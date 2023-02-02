@@ -99,6 +99,7 @@ class PlayDataModule(pl.LightningDataModule):
             self.modalities.append(key)
 
     def train_dataloader(self):
+        import pdb;pdb.set_trace()
         t_dl = {
             key: DataLoader(
                 dataset.data.to(torch.device("cuda:0")),
