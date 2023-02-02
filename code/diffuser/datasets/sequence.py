@@ -53,7 +53,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             model = getattr(models_m, cfg.model["_target_"].split(".")[-1]).load_from_checkpoint(chk.as_posix())
         else:
             model = hydra.utils.instantiate(cfg.model)
-        model = model.to(torch.device('cuda:0'))
+        #model = model.to(torch.device('cuda:0'))
 
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
@@ -66,7 +66,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             
             #batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda:0"))
             #batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda:0"))
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
 
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             latent_goal = model.language_goal(batch_obj['lang']).numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
