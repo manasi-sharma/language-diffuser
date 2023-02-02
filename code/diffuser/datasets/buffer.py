@@ -28,7 +28,6 @@ class ReplayBuffer:
 
     def __setitem__(self, key, val):
         self._dict[key] = val.to(torch.device("cuda:0"))
-        import pdb;pdb.set_trace()
         self._add_attributes()
 
     @property
@@ -50,6 +49,7 @@ class ReplayBuffer:
             instead of `buffer['observations']`
         '''
         for key, val in self._dict.items():
+            import pdb;pdb.set_trace()
             setattr(self, key, val)
 
     def items(self):
