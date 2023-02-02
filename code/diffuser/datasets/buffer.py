@@ -27,7 +27,7 @@ class ReplayBuffer:
         return self._dict[key]
 
     def __setitem__(self, key, val):
-        self._dict[key] = val
+        self._dict[key] = val.to(torch.device("cuda:0"))
         self._add_attributes()
 
     @property
