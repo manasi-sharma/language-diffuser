@@ -93,6 +93,7 @@ class Trainer(object):
         self.step = 0
 
         self.device = train_device
+        self.model.to(self.device)
 
     def reset_parameters(self):
         self.ema_model.load_state_dict(self.model.state_dict())

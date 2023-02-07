@@ -62,7 +62,7 @@ def join_vis_lang(img, lang_text):
 
 
 class LangEmbeddings:
-    def __init__(self, val_dataset_path, lang_folder, device=torch.device("cuda:0")):
+    def __init__(self, val_dataset_path, lang_folder, device=torch.device("cuda")):
         embeddings = np.load(Path(val_dataset_path) / lang_folder / "embeddings.npy", allow_pickle=True).item()
         # we want to get the embedding for full sentence, not just a task name
         self.lang_embeddings = {v["ann"][0]: v["emb"] for k, v in embeddings.items()}

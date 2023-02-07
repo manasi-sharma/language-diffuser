@@ -59,7 +59,7 @@ class ReplayBuffer:
         assert key not in self._dict
         dim = array.shape[-1]
         shape = (self.max_n_episodes, self.max_path_length, dim)
-        #self._dict[key] = torch.zeros(shape, dtype=float, device = torch.device('cuda:0'))
+        #self._dict[key] = torch.zeros(shape, dtype=float, device = torch.device('cuda'))
         self._dict[key] = np.zeros(shape, dtype=np.float32)
         # print(f'[ utils/mujoco ] Allocated {key} with size {shape}')
 
