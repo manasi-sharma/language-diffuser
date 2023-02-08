@@ -340,7 +340,6 @@ def evaluate_policy(model, env, lang_embeddings, args):
     if not args.debug:
         eval_sequences = tqdm(eval_sequences, position=0, leave=True)
 
-    import pdb;pdb.set_trace()
     for i, (initial_state, eval_sequence) in enumerate(eval_sequences):
         result = evaluate_sequence(
             env, model, task_oracle, initial_state, eval_sequence, lang_embeddings, val_annotations, args, plans
