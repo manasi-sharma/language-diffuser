@@ -141,7 +141,6 @@ def process_actions(
 
 def process_language(episode: Dict[str, np.ndarray], transforms: Dict, with_lang: bool) -> Dict[str, torch.Tensor]:
     seq_lang = {"lang": torch.empty(0)}
-    import pdb;pdb.set_trace()
     if with_lang:
         lang = torch.from_numpy(episode["language"]).float()
         if "language" in transforms:
