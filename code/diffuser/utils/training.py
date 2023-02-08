@@ -179,7 +179,7 @@ class Trainer(object):
             loads model and ema from disk
         '''
         #loadpath = os.path.join(self.bucket, logger.prefix, f'checkpoint/state.pt')
-        loadpath = os.path.join(self.bucket, 'checkpoint/state_debug_10000_1000_200.pt')
+        loadpath = os.path.join(self.bucket, 'checkpoint/state_debug_5000_100_200.pt')
         # data = logger.load_torch(loadpath)
         data = torch.load(loadpath)
 
