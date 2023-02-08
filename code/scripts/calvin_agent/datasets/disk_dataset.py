@@ -51,7 +51,6 @@ class DiskDataset(BaseDataset):
 
         if self.with_lang:
             self.episode_lookup, self.lang_lookup, self.lang_ann = self._build_file_indices_lang(self.abs_datasets_dir)
-            import pdb;pdb.set_trace()
         else:
             self.episode_lookup = self._build_file_indices(self.abs_datasets_dir)
 
@@ -114,6 +113,7 @@ class DiskDataset(BaseDataset):
             print("Exception, trying to load lang data from: ", abs_datasets_dir / "auto_lang_ann.npy")
             lang_data = np.load(abs_datasets_dir / "auto_lang_ann.npy", allow_pickle=True).item()
 
+        import pdb;pdb.set_trace()
         ep_start_end_ids = lang_data["info"]["indx"]  # each of them are 64
         lang_ann = lang_data["language"]["emb"]  # length total number of annotations
         lang_lookup = []
