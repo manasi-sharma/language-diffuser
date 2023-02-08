@@ -51,6 +51,7 @@ class DiskDataset(BaseDataset):
 
         if self.with_lang:
             self.episode_lookup, self.lang_lookup, self.lang_ann = self._build_file_indices_lang(self.abs_datasets_dir)
+            import pdb;pdb.set_trace()
         else:
             self.episode_lookup = self._build_file_indices(self.abs_datasets_dir)
 
