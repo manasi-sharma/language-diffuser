@@ -50,7 +50,7 @@ class DiskDataset(BaseDataset):
         self.skip_frames = skip_frames
 
         if self.with_lang:
-            self.episode_lookup, self.lang_lookup, self.lang_ann = self._build_file_indices_lang(self.abs_datasets_dir)
+            self.episode_lookup, self.lang_lookup, self.lang_ann, self.lang_ann_words = self._build_file_indices_lang(self.abs_datasets_dir)
         else:
             self.episode_lookup = self._build_file_indices(self.abs_datasets_dir)
 
@@ -88,6 +88,7 @@ class DiskDataset(BaseDataset):
         episode = {key: np.stack([ep[key] for ep in episodes]) for key in keys}
         if self.with_lang:
             episode["language"] = self.lang_ann[self.lang_lookup[idx]][0]  # TODO check  [0]
+            episode["language_ann_words"] = self.lang_ann_words[self.lang_lookup[idx]]
         return episode
 
     def _build_file_indices_lang(self, abs_datasets_dir: Path) -> Tuple[np.ndarray, List, np.ndarray]:
@@ -113,9 +114,9 @@ class DiskDataset(BaseDataset):
             print("Exception, trying to load lang data from: ", abs_datasets_dir / "auto_lang_ann.npy")
             lang_data = np.load(abs_datasets_dir / "auto_lang_ann.npy", allow_pickle=True).item()
 
-        import pdb;pdb.set_trace()
         ep_start_end_ids = lang_data["info"]["indx"]  # each of them are 64
         lang_ann = lang_data["language"]["emb"]  # length total number of annotations
+        lang_ann_words = lang_data['language']['ann']
         lang_lookup = []
         for i, (start_idx, end_idx) in enumerate(ep_start_end_ids):
             if self.pretrain:
@@ -128,7 +129,7 @@ class DiskDataset(BaseDataset):
                     episode_lookup.append(idx)
                 cnt += 1
 
-        return np.array(episode_lookup), lang_lookup, lang_ann
+        return np.array(episode_lookup), lang_lookup, lang_ann, lang_ann_words
 
     def _build_file_indices(self, abs_datasets_dir: Path) -> np.ndarray:
         """
