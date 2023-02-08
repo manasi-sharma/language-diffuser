@@ -33,7 +33,6 @@ def get_default_model_and_env(train_folder, dataset_path, checkpoint, env=None, 
     dataset = dataloader.dataset.datasets["lang"]
     device = torch.device(f"cuda:{device_id}")
 
-    import pdb;pdb.set_trace()
     if lang_embeddings is None:
         lang_embeddings = LangEmbeddings(dataset.abs_datasets_dir, lang_folder, device=device)
 
