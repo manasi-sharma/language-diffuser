@@ -170,7 +170,7 @@ class Trainer(object):
         if self.save_checkpoints:
             savepath = os.path.join(savepath, f'state_{self.step}.pt')
         else:
-            savepath = os.path.join(savepath, 'state.pt') #'state_debug_5000_100_200.pt')
+            savepath = os.path.join(savepath, 'state_debug_1e6_1e5_200.pt') #'state_debug_5000_100_200.pt')
         torch.save(data, savepath)
         #logger.print(f'[ utils/training ] Saved model to {savepath}')
 
