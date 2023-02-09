@@ -44,7 +44,7 @@ class Config(ParamsProto):
     returns_scale = 400.0 # Determined using rewards from the dataset
 
     ## training
-    n_steps_per_epoch = 1e4 #10000
+    n_steps_per_epoch = 10000 #10000
     loss_type = 'l2'
     n_train_steps = 1e5 #1e6
     batch_size = 8
