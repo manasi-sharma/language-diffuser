@@ -14,7 +14,7 @@ class Config(ParamsProto):
     model = 'models.TemporalUnet'
     diffusion = 'models.GaussianInvDynDiffusion'
     horizon = 32 #CHANGED
-    n_diffusion_steps = 1
+    n_diffusion_steps = 1000
     action_weight = 10
     loss_weights = None
     loss_discount = 1
