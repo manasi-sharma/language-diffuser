@@ -9,6 +9,8 @@ import os
 from omegaconf import DictConfig, ListConfig, OmegaConf
 from pytorch_lightning import Callback, LightningModule, seed_everything, Trainer
 
+from time import time
+
 
 def main(config_name, **deps):
     #def train(cfg: DictConfig) -> None:
@@ -189,11 +191,14 @@ def main(config_name, **deps):
         # -----------------------------------------------------------------------------#
 
         n_epochs = int(Config.n_train_steps // Config.n_steps_per_epoch)
-
+        print("\n\n\n NUM EPOCHS: ", n_epochs)
         for i in range(n_epochs):
+            t1= time()
             #logger.print(f'Epoch {i} / {n_epochs} | {logger.prefix}')
             print(f'Epoch {i} / {n_epochs}')
             trainer.train(n_train_steps=Config.n_steps_per_epoch)
+            print("time: ", time() - t1)
+            break
 
     train()
 
