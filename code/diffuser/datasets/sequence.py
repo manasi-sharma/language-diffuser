@@ -46,7 +46,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             calvin_dataloader = datamodule.val_dataloader()
 
         """Model initialization"""
-        chk = Path("/iliad/u/manasis/conditional-diffuser/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())
+        chk = Path("/iliad/u/manasis/language-diffuser/code/D_D_static_rgb_baseline/mcil_baseline.ckpt") #get_last_checkpoint(Path.cwd())
 
         # Load Model
         if chk is not None:
