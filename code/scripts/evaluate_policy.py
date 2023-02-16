@@ -62,7 +62,7 @@ def get_log_dir(log_dir):
 class CustomModel:
     def __init__(self, cfg):
         #state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
-        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state_full_1_1_nsteps_per.pt',
+        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/debug_1e4_1000_200.pt',
                                 map_location=Config.device)
 
         dataset_config = utils.Config(
@@ -80,9 +80,7 @@ class CustomModel:
             #discount=Config.discount,
             #termination_penalty=Config.termination_penalty,
         )
-        print("\n\n\nYOOOOOOOOOOOOO_0")
         dataset = dataset_config()
-        print("\n\n\nYOOOOOOOOOOOOO_1")
         self.dataset = dataset
 
         observation_dim = dataset.observation_dim
@@ -152,7 +150,6 @@ class CustomModel:
         #renderer = render_config()
         trainer = trainer_config(diffusion, dataset)
         trainer.step = state_dict['step']
-        print("\n\n\nYOOOOOOOOOOOOO_2")
         trainer.model.load_state_dict(state_dict['model'])
         trainer.ema_model.load_state_dict(state_dict['ema'])
         self.trainer = trainer
@@ -435,7 +432,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-01-26/23-33-30/'
+        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-02-09/16-41-53/'
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None

@@ -29,8 +29,6 @@ class SequenceDataset(torch.utils.data.Dataset):
         use_padding=True, 
         include_returns=False):
 
-        print("\n\n\n\n\n\n\nYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\n")
-
         self.horizon = horizon
         self.max_path_length = max_path_length
         self.use_padding = use_padding
