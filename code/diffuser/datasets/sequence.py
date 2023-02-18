@@ -51,6 +51,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             model = getattr(models_m, cfg.model["_target_"].split(".")[-1]).load_from_checkpoint(chk.as_posix())
         else:
             model = hydra.utils.instantiate(cfg.model)
+        for param in model.parameters():
+            param.requires_grad = False
         model = model.to(torch.device('cuda'))
 
         """Creating embeddings initialization"""
