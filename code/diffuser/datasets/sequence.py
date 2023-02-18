@@ -54,6 +54,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         for param in model.parameters():
             param.requires_grad = False
         model = model.to(torch.device('cuda'))
+        import pdb;pdb.set_trace()
 
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
@@ -69,7 +70,6 @@ class SequenceDataset(torch.utils.data.Dataset):
 
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
-            import pdb;pdb.set_trace()
             len_hor = len(perceptual_emb)
             action_emb = batch_obj['actions'].squeeze().numpy()
             episode['observations'] = perceptual_emb
