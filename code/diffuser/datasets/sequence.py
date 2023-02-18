@@ -54,7 +54,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         for param in model.parameters():
             param.requires_grad = False
         model = model.to(torch.device('cuda'))
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
 
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)

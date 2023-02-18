@@ -197,7 +197,7 @@ def main(config_name, **deps):
             #logger.print(f'Epoch {i} / {n_epochs} | {logger.prefix}')
             print(f'Epoch {i} / {n_epochs}')
             trainer.train(n_train_steps=Config.n_steps_per_epoch)
-            print("time: ", time() - t1)
+            print("\n\n\ntime: ", time() - t1, "\n\n\n")
             break
 
     train()
