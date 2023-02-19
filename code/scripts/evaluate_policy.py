@@ -164,6 +164,8 @@ class CustomModel:
         else:
             encoding_model = hydra.utils.instantiate(cfg.model)
         self.encoding_model = encoding_model
+        for param in self.encoding_model.parameters():
+            param.requires_grad = False
 
     def reset(self):
         pass
