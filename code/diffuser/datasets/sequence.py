@@ -146,6 +146,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             returns = np.array([returns/self.returns_scale], dtype=np.float32)"""
             fields_language = self.fields.language[:, start:end, :]
             t1 = time()
+            import pdb;pdb.set_trace()
             fields_language = np.unique(fields_language, axis=1)
             print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             if fields_language.shape[1] != 1:
