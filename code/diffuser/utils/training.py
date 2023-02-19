@@ -117,9 +117,9 @@ class Trainer(object):
                 batch = next(self.dataloader)
                 batch = batch_to_device(batch, device=self.device)
                 #import pdb;pdb.set_trace()
-                #t1 = time()
+                t1 = time()
                 loss, infos = self.model.loss(*batch)
-                #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+                print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
                 loss = loss / self.gradient_accumulate_every
                 loss.backward()
 
