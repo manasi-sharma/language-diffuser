@@ -144,16 +144,16 @@ class SequenceDataset(torch.utils.data.Dataset):
             discounts = self.discounts[:len(rewards)]
             returns = (discounts * rewards).sum()
             returns = np.array([returns/self.returns_scale], dtype=np.float32)"""
-            t1 = time()
             fields_language = self.fields.language[:, start:end, :]
-            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             fields_language = np.unique(fields_language, axis=1)
             if fields_language.shape[1] != 1:
                 print("\n\nError!\n\n")
                 import pdb;pdb.set_trace()
             returns = fields_language[path_ind, 0]
             #import pdb;pdb.set_trace()
+            t1 = time()
             batch = RewardBatch(trajectories, conditions, returns)
+            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
         else:
             batch = Batch(trajectories, conditions)
         
