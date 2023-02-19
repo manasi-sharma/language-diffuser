@@ -131,7 +131,6 @@ class SequenceDataset(torch.utils.data.Dataset):
         return len(self.indices)
 
     def __getitem__(self, idx, eps=1e-4):
-        t1 = time()
         path_ind, start, end = self.indices[idx]
 
         observations = self.fields.normed_observations[path_ind, start:end]
@@ -139,14 +138,15 @@ class SequenceDataset(torch.utils.data.Dataset):
 
         conditions = self.get_conditions(observations)
         trajectories = np.concatenate([actions, observations], axis=-1)
-        print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
 
         if self.include_returns:
             """rewards = self.fields.rewards[path_ind, start:]
             discounts = self.discounts[:len(rewards)]
             returns = (discounts * rewards).sum()
             returns = np.array([returns/self.returns_scale], dtype=np.float32)"""
+            t1 = time()
             fields_language = self.fields.language[:, start:end, :]
+            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             fields_language = np.unique(fields_language, axis=1)
             if fields_language.shape[1] != 1:
                 print("\n\nError!\n\n")
