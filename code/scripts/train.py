@@ -192,13 +192,12 @@ def main(config_name, **deps):
 
         n_epochs = int(Config.n_train_steps // Config.n_steps_per_epoch)
         print("\n\n\n NUM EPOCHS: ", n_epochs)
+        t1= time()
         for i in range(n_epochs):
-            t1= time()
             #logger.print(f'Epoch {i} / {n_epochs} | {logger.prefix}')
             print(f'Epoch {i} / {n_epochs}')
             trainer.train(n_train_steps=Config.n_steps_per_epoch)
-            print("\n\n\ntime: ", time() - t1, "\n\n\n")
-            break
+        print("\n\n\ntime: ", (time() - t1)/3600, "\n\n\n")
 
     train()
 
