@@ -343,7 +343,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
     if not args.debug:
         eval_sequences = tqdm(eval_sequences, position=0, leave=True)
 
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     for i, (initial_state, eval_sequence) in enumerate(eval_sequences):
         #t1= time.time()
         result = evaluate_sequence(
@@ -406,12 +406,12 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     #plan, latent_goal = model.get_pp_plan_lang(obs, goal)
     #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     for step in range(args.ep_len):
         t1 = time.time()
         action = model.step(obs, goal)
-        print("\n\n\ntime diff: ", time.time()-t1)
-        import pdb;pdb.set_trace()
+        #print("\n\n\ntime diff: ", time.time()-t1)
+        #import pdb;pdb.set_trace()
         obs, _, _, current_info = env.step(action)
         if args.debug:
             img = env.render(mode="rgb_array")
