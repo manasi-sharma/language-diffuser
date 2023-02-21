@@ -343,8 +343,9 @@ def evaluate_policy(model, env, lang_embeddings, args):
     if not args.debug:
         eval_sequences = tqdm(eval_sequences, position=0, leave=True)
 
+    import pdb;pdb.set_trace()
     for i, (initial_state, eval_sequence) in enumerate(eval_sequences):
-        t1= time.time()
+        #t1= time.time()
         result = evaluate_sequence(
             env, model, task_oracle, initial_state, eval_sequence, lang_embeddings, val_annotations, args, plans
         )
@@ -353,7 +354,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
             eval_sequences.set_description(
                 " ".join([f"{i + 1}/5 : {v * 100:.1f}% |" for i, v in enumerate(count_success(results))]) + "|"
             )
-        print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        #print("\n\n\TIMEEEE diff: ", time.time()-t1)
         import pdb;pdb.set_trace()
         if i == 5:
             break
@@ -375,7 +376,10 @@ def evaluate_sequence(
         print(f"Evaluating sequence: {' -> '.join(eval_sequence)}")
         print("Subtask: ", end="")
     for subtask in eval_sequence:
+        t1= time.time()
         success = rollout(env, model, task_checker, args, subtask, lang_embeddings, val_annotations, plans)
+        print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        import pdb;pdb.set_trace()
         if success:
             success_counter += 1
         else:
