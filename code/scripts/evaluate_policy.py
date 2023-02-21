@@ -400,10 +400,10 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
     for step in range(args.ep_len):
-        action = model.step(obs, goal)
         t1 = time.time()
-        obs, _, _, current_info = env.step(action)
+        action = model.step(obs, goal)
         print("\n\n\ntime diff: ", time.time()-t1)
+        obs, _, _, current_info = env.step(action)
         if args.debug:
             img = env.render(mode="rgb_array")
             join_vis_lang(img, lang_annotation)
