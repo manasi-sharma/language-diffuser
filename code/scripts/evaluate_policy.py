@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import sys
 import time
+from time import time
 
 sys.path.insert(0, Path(__file__).absolute().parents[2].as_posix())
 
@@ -62,7 +63,7 @@ def get_log_dir(log_dir):
 class CustomModel:
     def __init__(self, cfg):
         #state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
-        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/debug_1e4_1000_200.pt',
+        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
                                 map_location=Config.device)
 
         dataset_config = utils.Config(
@@ -186,11 +187,15 @@ class CustomModel:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
         latent_goal = to_torch(latent_goal, device=device)
+        t1 = time()
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
         #import pdb;pdb.set_trace()
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
         action = self.trainer.ema_model.inv_model(obs_comb)
+        print("\n\n\ntime diff: ", time()-t1)
+        import pdb;pdb.set_trace()
+        
         #action = action.reshape(len(action[0]), 1)
         action = action.squeeze()
 
@@ -434,7 +439,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-02-09/16-41-53/'
+        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-02-19/01-57-28/'
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
