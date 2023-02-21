@@ -344,6 +344,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
         eval_sequences = tqdm(eval_sequences, position=0, leave=True)
 
     for i, (initial_state, eval_sequence) in enumerate(eval_sequences):
+        t1= time.time()
         result = evaluate_sequence(
             env, model, task_oracle, initial_state, eval_sequence, lang_embeddings, val_annotations, args, plans
         )
@@ -352,6 +353,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
             eval_sequences.set_description(
                 " ".join([f"{i + 1}/5 : {v * 100:.1f}% |" for i, v in enumerate(count_success(results))]) + "|"
             )
+        print("\n\n\TIMEEEE diff: ", time.time()-t1)
         if i == 5:
             break
 
@@ -400,9 +402,9 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
     for step in range(args.ep_len):
-        t1 = time.time()
+        #t1 = time.time()
         action = model.step(obs, goal)
-        print("\n\n\ntime diff: ", time.time()-t1)
+        #print("\n\n\ntime diff: ", time.time()-t1)
         obs, _, _, current_info = env.step(action)
         if args.debug:
             img = env.render(mode="rgb_array")
