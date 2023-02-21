@@ -354,6 +354,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
                 " ".join([f"{i + 1}/5 : {v * 100:.1f}% |" for i, v in enumerate(count_success(results))]) + "|"
             )
         print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        import pdb;pdb.set_trace()
         if i == 5:
             break
 
