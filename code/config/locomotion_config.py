@@ -14,7 +14,7 @@ class Config(ParamsProto):
     model = 'models.TemporalUnet'
     diffusion = 'models.GaussianInvDynDiffusion'
     horizon = 32 #CHANGED
-    n_diffusion_steps = 1
+    n_diffusion_steps = 200
     action_weight = 10
     loss_weights = None
     loss_discount = 1
@@ -46,8 +46,8 @@ class Config(ParamsProto):
     ## training
     n_steps_per_epoch = 1000 #10000
     loss_type = 'l2'
-    n_train_steps = 1e5 #1e6
-    batch_size = 32
+    n_train_steps = 1e4 #1e6
+    batch_size = 8
     learning_rate = 2e-4
     gradient_accumulate_every = 2
     ema_decay = 0.995
