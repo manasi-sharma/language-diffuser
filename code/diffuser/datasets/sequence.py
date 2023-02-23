@@ -62,7 +62,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
         import pdb;pdb.set_trace()
         for i, batch in enumerate(calvin_dataloader):
-            #t1= time()
+            t1= time()
             episode = {}
             if train_flag:
                 batch_obj = batch
@@ -74,11 +74,9 @@ class SequenceDataset(torch.utils.data.Dataset):
 
             #perceptual_emb = batch_obj["robot_obs"].cpu().detach().numpy()
             #latent_goal = batch_obj["lang"].cpu().detach().numpy()
-            t1= time()
+            #t1= time()
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
-            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
-            import pdb;pdb.set_trace()
 
             len_hor = len(perceptual_emb)
             action_emb = batch_obj['actions'].squeeze().numpy()
@@ -89,8 +87,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             #t1= time()
             fields.add_path(episode)
             #print("i: ", i)
-            #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
-            #import pdb;pdb.set_trace()
+            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+            import pdb;pdb.set_trace()
         fields.finalize()
 
         self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
