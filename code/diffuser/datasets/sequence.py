@@ -88,8 +88,11 @@ class SequenceDataset(torch.utils.data.Dataset):
             fields.add_path(episode)
             #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             #import pdb;pdb.set_trace()
-            #print("i: ", i)
+            print("i: ", i)
+        t1= time()
         fields.finalize()
+        print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+        import pdb;pdb.set_trace()
 
         self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
         self.indices = self.make_indices(fields.path_lengths, horizon)
