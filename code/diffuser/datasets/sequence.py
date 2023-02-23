@@ -80,8 +80,9 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['actions'] = action_emb
             episode['language'] = latent_goal
             fields.add_path(episode)
-            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
-            import pdb;pdb.set_trace()
+            print("i: ", i)
+            #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+            #import pdb;pdb.set_trace()
         fields.finalize()
 
         self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
