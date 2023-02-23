@@ -12,6 +12,8 @@ from pathlib import Path
 import play_lmp as models_m
 import hydra
 
+import sys
+
 from time import time
 
 
@@ -93,6 +95,12 @@ class SequenceDataset(torch.utils.data.Dataset):
         self.normalize()
 
         print(fields)
+        
+        np.save('dataset_npy_files/normed_observations.npy', self.fields.normed_observations)
+        np.save('dataset_npy_files/normed_actions.npy', self.fields.normed_actions)
+        np.save('dataset_npy_files/language.npy', self.fields.language)
+        import pdb;pdb.set_trace()
+        sys.exit()
 
         # shapes = {key: val.shape for key, val in self.fields.items()}
         # print(f'[ datasets/mujoco ] Dataset fields: {shapes}')
