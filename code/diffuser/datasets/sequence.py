@@ -60,17 +60,20 @@ class SequenceDataset(torch.utils.data.Dataset):
 
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         for i, batch in enumerate(calvin_dataloader):
-            t1= time()
+            #t1= time()
             episode = {}
             if train_flag:
                 batch_obj = batch
             else:
                 batch_obj = batch['lang']
             
+            t1= time()
             batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda"))
             batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
+            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+            import pdb;pdb.set_trace()
 
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
@@ -80,7 +83,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['actions'] = action_emb
             episode['language'] = latent_goal
             fields.add_path(episode)
-            print("i: ", i)
+            #print("i: ", i)
             #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             #import pdb;pdb.set_trace()
         fields.finalize()
