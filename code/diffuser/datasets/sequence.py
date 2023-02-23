@@ -84,9 +84,9 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['language'] = latent_goal
 
             #t1= time()
-            fields.add_path(episode)
             print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             import pdb;pdb.set_trace()
+            fields.add_path(episode)
             #print("i: ", i)
             #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             #import pdb;pdb.set_trace()
