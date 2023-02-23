@@ -100,7 +100,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy', self.fields.normed_observations)
         np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy', self.fields.normed_actions)
         np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy', self.fields.language)
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         sys.exit()
 
         # shapes = {key: val.shape for key, val in self.fields.items()}
@@ -145,7 +145,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         #t1 = time()
         path_ind, start, end = self.indices[idx]
 
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         observations = self.fields.normed_observations[path_ind, start:end]
         actions = self.fields.normed_actions[path_ind, start:end]
 
