@@ -63,6 +63,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         t1 = time()
         i = 0
         for batch in calvin_dataloader:
+            import pdb;pdb.set_trace()
             i += 1
             if i == 1000:
                 break
