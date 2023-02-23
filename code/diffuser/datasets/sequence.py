@@ -101,7 +101,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy', self.fields.normed_actions)
         np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy', self.fields.language)
         #import pdb;pdb.set_trace()
-        sys.exit()
+        #sys.exit()
 
         # shapes = {key: val.shape for key, val in self.fields.items()}
         # print(f'[ datasets/mujoco ] Dataset fields: {shapes}')
