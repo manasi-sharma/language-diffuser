@@ -61,7 +61,9 @@ class SequenceDataset(torch.utils.data.Dataset):
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
         t1 = time()
-        for i, batch in enumerate(calvin_dataloader):
+        i = 0
+        for batch in calvin_dataloader:
+            i += 1
             if i == 1000:
                 break
         print("\n\n\nLOSS NONE TIME: ", time()-t1, "\n\n\n")
