@@ -62,7 +62,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
         import pdb;pdb.set_trace()
         for i, batch in enumerate(calvin_dataloader):
-            t1= time()
+            #t1= time()
             episode = {}
             if train_flag:
                 batch_obj = batch
@@ -86,8 +86,8 @@ class SequenceDataset(torch.utils.data.Dataset):
 
             #t1= time()
             fields.add_path(episode)
-            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
-            import pdb;pdb.set_trace()
+            #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+            #import pdb;pdb.set_trace()
             #print("i: ", i)
         fields.finalize()
 
