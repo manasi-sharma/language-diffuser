@@ -62,7 +62,7 @@ def get_log_dir(log_dir):
 class CustomModel:
     def __init__(self, cfg):
         #state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
-        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/new_langdiffuser_1e4_1000_200_bsize_8_ABCD.pt',
+        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/langdiffuser_1e6_10000_200_bsize_8_debug.pt',
                                 map_location=Config.device)
 
         dataset_config = utils.Config(
@@ -449,7 +449,7 @@ def wrap_main(config_name):
         #args = parser.parse_args()
         args = Args()
         args.dataset_path = '/iliad/u/manasis/language-diffuser/code/calvin_debug_dataset'
-        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-02-22/12-48-19/'
+        args.train_folder = '/iliad/u/manasis/language-diffuser/code/outputs/2023-02-22/16-23-56/'
         args.checkpoints = None
         args.checkpoint = None
         args.last_k_checkpoints =  None
