@@ -75,16 +75,16 @@ class SequenceDataset(torch.utils.data.Dataset):
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
 
-            t1= time()
             len_hor = len(perceptual_emb)
             action_emb = batch_obj['actions'].squeeze().numpy()
             episode['observations'] = perceptual_emb
             episode['actions'] = action_emb
             episode['language'] = latent_goal
+
+            t1= time()
+            fields.add_path(episode)
             print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             import pdb;pdb.set_trace()
-
-            fields.add_path(episode)
             #print("i: ", i)
             #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
             #import pdb;pdb.set_trace()
