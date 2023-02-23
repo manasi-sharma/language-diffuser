@@ -63,7 +63,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
         for i, batch in enumerate(calvin_dataloader):
-            print(i)
+            #print(i)
             episode = {}
             if train_flag:
                 batch_obj = batch
