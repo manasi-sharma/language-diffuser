@@ -7,7 +7,7 @@ _target_: calvin_agent.datasets.play_data_module.PlayDataModule
 _recursive_: false
 root_data_dir: "dataset/task_D_D"
 action_space: 7
-num_workers: 2
+num_workers: 3
 action_max: [1., 1., 1., 1., 1., 1., 1.,]
 action_min: [-1., -1., -1., -1., -1., -1., -1]
 shuffle_val: false
