@@ -60,7 +60,9 @@ class SequenceDataset(torch.utils.data.Dataset):
 
         """Creating embeddings initialization"""
         fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
+        import pdb;pdb.set_trace()
         for i, batch in enumerate(calvin_dataloader):
+            t1= time()
             episode = {}
             if train_flag:
                 batch_obj = batch
@@ -78,6 +80,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['actions'] = action_emb
             episode['language'] = latent_goal
             fields.add_path(episode)
+            print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
+            import pdb;pdb.set_trace()
         fields.finalize()
 
         self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
