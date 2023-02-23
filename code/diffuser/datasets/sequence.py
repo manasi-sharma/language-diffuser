@@ -84,8 +84,8 @@ class SequenceDataset(torch.utils.data.Dataset):
 
             fields.add_path(episode)
             print("\n\n\nLOSS0 TIME: ", time()-t2, "\n\n\n")
-            import pdb;pdb.set_trace()
-            if i == 100:
+            #import pdb;pdb.set_trace()
+            if i == 10:
                 break
         print("\n\n\nLOSS1 TIME: ", time()-t1, "\n\n\n")
         import pdb;pdb.set_trace()
