@@ -63,7 +63,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         #import pdb;pdb.set_trace()
         t1= time()
         for i, batch in enumerate(calvin_dataloader):
-            #t1= time()
+            t2= time()
             episode = {}
             if train_flag:
                 batch_obj = batch
@@ -73,9 +73,6 @@ class SequenceDataset(torch.utils.data.Dataset):
             batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda"))
             batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
 
-            #perceptual_emb = batch_obj["robot_obs"].cpu().detach().numpy()
-            #latent_goal = batch_obj["lang"].cpu().detach().numpy()
-            #t1= time()
             perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
             latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
             
@@ -85,11 +82,9 @@ class SequenceDataset(torch.utils.data.Dataset):
             episode['actions'] = action_emb
             episode['language'] = latent_goal
 
-            #t1= time()
             fields.add_path(episode)
-            #print("\n\n\nLOSS TIME: ", time()-t1, "\n\n\n")
-            #import pdb;pdb.set_trace()
-            #print("i: ", i)
+            print("\n\n\nLOSS0 TIME: ", time()-t2, "\n\n\n")
+            import pdb;pdb.set_trace()
             if i == 100:
                 break
         print("\n\n\nLOSS1 TIME: ", time()-t1, "\n\n\n")
