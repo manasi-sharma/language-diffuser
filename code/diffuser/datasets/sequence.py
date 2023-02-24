@@ -31,12 +31,14 @@ class SequenceDataset(torch.utils.data.Dataset):
         max_path_length=1000,
         max_n_episodes=1013111,
         use_padding=True, 
-        include_returns=False):
+        include_returns=False,
+        read_npy_embeddings=True):
 
         self.horizon = horizon
         self.max_path_length = max_path_length
         self.use_padding = use_padding
         self.include_returns = include_returns
+        self.read_npy_embeddings = read_npy_embeddings
         
         """Dataset initialization"""
         datamodule = hydra.utils.instantiate(cfg.datamodule)
@@ -61,42 +63,67 @@ class SequenceDataset(torch.utils.data.Dataset):
         #import pdb;pdb.set_trace()
 
         """Creating embeddings initialization"""
-        fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
-        for i, batch in enumerate(calvin_dataloader):
-            #print(i)
-            episode = {}
-            if train_flag:
-                batch_obj = batch
-            else:
-                batch_obj = batch['lang']
-            
-            batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda"))
-            batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
+        if self.read_npy_embeddings:
+            import pdb;pdb.set_trace()
+            t1= time()
+            normed_observations = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy')
+            normed_actions = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy')
+            language = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy')
+            print("\n\n\ntimeeee: ", (time() - t1)/60)
+            import pdb;pdb.set_trace()
 
-            perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
-            latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
-            
-            len_hor = len(perceptual_emb)
-            action_emb = batch_obj['actions'].squeeze().numpy()
-            episode['observations'] = perceptual_emb
-            episode['actions'] = action_emb
-            episode['language'] = latent_goal
+            fields = {}
+            fields['observations'] = normed_observations
+            fields['actions'] = normed_actions
+            fields['language'] = language
 
-            fields.add_path(episode)
-        fields.finalize()
+            self.observation_dim = fields['observations'].shape[-1]
+            self.action_dim = fields['actions'].shape[-1]
+            self.fields = fields
+            self.n_episodes = fields['observations'].shape[0]
+            self.path_lengths = fields.path_lengths
 
-        self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
-        self.indices = self.make_indices(fields.path_lengths, horizon)
+            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
+            #self.indices = self.make_indices(fields.path_lengths, horizon)
+            self.indices = self.make_indices(self.n_episodes, horizon)
+            self.normalize()
+        else:
+            fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
+            for i, batch in enumerate(calvin_dataloader):
+                #print(i)
+                episode = {}
+                if train_flag:
+                    batch_obj = batch
+                else:
+                    batch_obj = batch['lang']
+                
+                batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda"))
+                batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
 
-        self.observation_dim = fields.observations.shape[-1]
-        self.action_dim = fields.actions.shape[-1]
-        self.fields = fields
-        self.n_episodes = fields.n_episodes
-        self.path_lengths = fields.path_lengths
-        self.normalize()
+                perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
+                latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
+                
+                len_hor = len(perceptual_emb)
+                action_emb = batch_obj['actions'].squeeze().numpy()
+                episode['observations'] = perceptual_emb
+                episode['actions'] = action_emb
+                episode['language'] = latent_goal
+
+                fields.add_path(episode)
+            fields.finalize()
+
+            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
+            #self.indices = self.make_indices(fields.path_lengths, horizon)
+            self.indices = self.make_indices(fields.n_episodes, horizon)
+
+            self.observation_dim = fields.observations.shape[-1]
+            self.action_dim = fields.actions.shape[-1]
+            self.fields = fields
+            self.n_episodes = fields.n_episodes
+            self.path_lengths = fields.path_lengths
+            self.normalize()
 
         print(fields)
-        import pdb;pdb.set_trace()
         
         #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy', self.fields.normed_observations)
         #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy', self.fields.normed_actions)
@@ -116,14 +143,16 @@ class SequenceDataset(torch.utils.data.Dataset):
             normed = self.normalizer(array, key)
             self.fields[f'normed_{key}'] = normed.reshape(self.n_episodes, self.max_path_length, -1)
 
-    def make_indices(self, path_lengths, horizon):
+    def make_indices(self, path_lengths_len, horizon):
         '''
             makes indices for sampling from dataset;
             each index maps to a datapoint
         '''
         #import pdb;pdb.set_trace()
         indices = []
-        for i, path_length in enumerate(path_lengths):
+        path_length = 32
+        #for i, path_length in enumerate(path_lengths):
+        for i in range(path_lengths_len):
             max_start = min(path_length - 1, self.max_path_length - horizon)
             if not self.use_padding:
                 max_start = min(max_start, path_length - horizon)
@@ -147,8 +176,12 @@ class SequenceDataset(torch.utils.data.Dataset):
         path_ind, start, end = self.indices[idx]
 
         #import pdb;pdb.set_trace()
-        observations = self.fields.normed_observations[path_ind, start:end]
-        actions = self.fields.normed_actions[path_ind, start:end]
+        if self.read_npy_embeddings:
+            observations = self.fields['normed_observations'][path_ind, start:end]
+            actions = self.fields['normed_actions'][path_ind, start:end]
+        else:
+            observations = self.fields.normed_observations[path_ind, start:end]
+            actions = self.fields.normed_actions[path_ind, start:end]
 
         conditions = self.get_conditions(observations)
         trajectories = np.concatenate([actions, observations], axis=-1)
@@ -158,7 +191,10 @@ class SequenceDataset(torch.utils.data.Dataset):
             discounts = self.discounts[:len(rewards)]
             returns = (discounts * rewards).sum()
             returns = np.array([returns/self.returns_scale], dtype=np.float32)"""
-            fields_language = self.fields.language[:, start:end, :]
+            if self.read_npy_embeddings:
+                fields_language = self.fields['language'][:, start:end, :]
+            else:
+                fields_language = self.fields.language[:, start:end, :]
             #import pdb;pdb.set_trace()
             #fields_language = np.unique(fields_language, axis=1)
             #if fields_language.shape[1] != 1:
