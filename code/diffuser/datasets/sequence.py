@@ -63,6 +63,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         #import pdb;pdb.set_trace()
 
         """Creating embeddings initialization"""
+        self.read_npy_embeddings = False
         if self.read_npy_embeddings:
             #
             # import pdb;pdb.set_trace()
