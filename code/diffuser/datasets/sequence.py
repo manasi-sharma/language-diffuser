@@ -64,13 +64,14 @@ class SequenceDataset(torch.utils.data.Dataset):
 
         """Creating embeddings initialization"""
         if self.read_npy_embeddings:
-            import pdb;pdb.set_trace()
-            t1= time()
+            #
+            # import pdb;pdb.set_trace()
+            #t1= time()
             normed_observations = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy')
             normed_actions = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy')
             language = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy')
-            print("\n\n\ntimeeee: ", (time() - t1)/60)
-            import pdb;pdb.set_trace()
+            #print("\n\n\ntimeeee: ", (time() - t1)/60)
+            #import pdb;pdb.set_trace()
 
             fields = {}
             fields['observations'] = normed_observations
