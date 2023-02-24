@@ -11,7 +11,8 @@ POINTMASS_KEYS = ['observations', 'actions', 'next_observations', 'deltas']
 class DatasetNormalizer:
 
     def __init__(self, dataset, normalizer, path_lengths=None):
-        dataset = flatten(dataset, path_lengths)
+        #dataset = flatten(dataset, path_lengths)
+        dataset = flatten(dataset) #, path_lengths)
 
         self.observation_dim = dataset['observations'].shape[1]
         self.action_dim = dataset['actions'].shape[1]
@@ -44,17 +45,19 @@ class DatasetNormalizer:
     def unnormalize(self, x, key):
         return self.normalizers[key].unnormalize(x)
 
-def flatten(dataset, path_lengths):
+def flatten(dataset): #, path_lengths):
     '''
         flattens dataset of { key: [ n_episodes x max_path_lenth x dim ] }
             to { key : [ (n_episodes * sum(path_lengths)) x dim ]}
     '''
     flattened = {}
     for key, xs in dataset.items():
-        assert len(xs) == len(path_lengths)
+        #assert len(xs) == len(path_lengths)
+        length = 32
         flattened[key] = np.concatenate([
             x[:length]
-            for x, length in zip(xs, path_lengths)
+            for x in xs
+            #for x, length in zip(xs, path_lengths)
         ], axis=0)
     return flattened
 
