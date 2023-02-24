@@ -96,6 +96,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         self.normalize()
 
         print(fields)
+        import pdb;pdb.set_trace()
         
         #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy', self.fields.normed_observations)
         #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy', self.fields.normed_actions)
