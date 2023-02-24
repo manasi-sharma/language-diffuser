@@ -81,7 +81,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             self.action_dim = fields['actions'].shape[-1]
             self.fields = fields
             self.n_episodes = fields['observations'].shape[0]
-            self.path_lengths = fields.path_lengths
+            #self.path_lengths = fields.path_lengths
 
             self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
             #self.indices = self.make_indices(fields.path_lengths, horizon)
