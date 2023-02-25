@@ -115,8 +115,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             fields.finalize()
 
             self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
-            #self.indices = self.make_indices(fields.path_lengths, horizon)
-            self.indices = self.make_indices(fields.n_episodes, horizon)
+            self.indices = self.make_indices(fields.path_lengths, horizon)
+            #self.indices = self.make_indices(fields.n_episodes, horizon)
 
             self.observation_dim = fields.observations.shape[-1]
             self.action_dim = fields.actions.shape[-1]
@@ -145,16 +145,16 @@ class SequenceDataset(torch.utils.data.Dataset):
             normed = self.normalizer(array, key)
             self.fields[f'normed_{key}'] = normed.reshape(self.n_episodes, self.max_path_length, -1)
 
-    def make_indices(self, path_lengths_len, horizon):
+    def make_indices(self, path_lengths, horizon): #path_lengths_len
         '''
             makes indices for sampling from dataset;
             each index maps to a datapoint
         '''
         #import pdb;pdb.set_trace()
         indices = []
-        path_length = 32
-        #for i, path_length in enumerate(path_lengths):
-        for i in range(path_lengths_len):
+        #path_length = 32
+        for i, path_length in enumerate(path_lengths):
+        #for i in range(path_lengths_len):
             max_start = min(path_length - 1, self.max_path_length - horizon)
             if not self.use_padding:
                 max_start = min(max_start, path_length - horizon)
