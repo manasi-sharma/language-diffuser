@@ -62,7 +62,7 @@ def get_log_dir(log_dir):
 class CustomModel:
     def __init__(self, cfg):
         #state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/state.pt',
-        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/langdiffuser_1e6_10000_200_bsize_8_debug.pt',
+        state_dict = torch.load(f'/iliad/u/manasis/language-diffuser/code/logs/checkpoint/langdiffuser_1e5_1000_200_bsize_8_debug_newdataloader.pt',
                                 map_location=Config.device)
 
         dataset_config = utils.Config(
