@@ -11,8 +11,8 @@ POINTMASS_KEYS = ['observations', 'actions', 'next_observations', 'deltas']
 class DatasetNormalizer:
 
     def __init__(self, dataset, normalizer, path_lengths=None):
-        #dataset = flatten(dataset, path_lengths)
-        dataset = flatten(dataset) #, path_lengths)
+        dataset = flatten(dataset, path_lengths)
+        #dataset = flatten(dataset) #, path_lengths)
 
         self.observation_dim = dataset['observations'].shape[1]
         self.action_dim = dataset['actions'].shape[1]
@@ -39,26 +39,33 @@ class DatasetNormalizer:
         return self.normalize(*args, **kwargs)
 
     def normalize(self, x, key):
-        #import pdb;pdb.set_trace()
         return self.normalizers[key].normalize(x)
 
     def unnormalize(self, x, key):
         return self.normalizers[key].unnormalize(x)
 
-def flatten(dataset): #, path_lengths):
+def flatten(dataset, path_lengths):
+    #def flatten(dataset): #, path_lengths):
     '''
         flattens dataset of { key: [ n_episodes x max_path_lenth x dim ] }
             to { key : [ (n_episodes * sum(path_lengths)) x dim ]}
     '''
     flattened = {}
     for key, xs in dataset.items():
-        #assert len(xs) == len(path_lengths)
-        length = 32
-        flattened[key] = np.concatenate([
-            x[:length]
-            for x in xs
-            #for x, length in zip(xs, path_lengths)
-        ], axis=0)
+        assert len(xs) == len(path_lengths)
+        #length = 32
+        list_flat = []
+        for x, length in zip(xs, path_lengths):
+            assert length == 32
+            list_flat.append(x[:length])
+
+        flattened[key] = np.concatenate(list_flat, axis=0)
+
+        #flattened[key] = np.concatenate([
+        #    x[:length]
+        #    #for x in xs
+        #    for x, length in zip(xs, path_lengths)
+        #], axis=0)
     return flattened
 
 #-----------------------------------------------------------------------------#
@@ -215,7 +222,6 @@ class CDFNormalizer(Normalizer):
     def wrap(self, fn_name, x):
         shape = x.shape
         ## reshape to 2d
-        #import pdb;pdb.set_trace()
         x = x.reshape(-1, self.dim)
         out = np.zeros_like(x)
         for i, cdf in enumerate(self.cdfs):
@@ -224,7 +230,6 @@ class CDFNormalizer(Normalizer):
         return out.reshape(shape)
 
     def normalize(self, x):
-        #import pdb;pdb.set_trace()
         return self.wrap('normalize', x)
 
     def unnormalize(self, x):
