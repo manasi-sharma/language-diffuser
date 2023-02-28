@@ -85,8 +85,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             self.n_episodes = fields['observations'].shape[0]
             #self.path_lengths = fields.path_lengths
 
-            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
-            #self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
+            #self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
+            self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
             #self.indices = self.make_indices(fields.path_lengths, horizon)
             self.indices = self.make_indices(self.n_episodes, horizon)
             self.normalize()
@@ -115,8 +115,8 @@ class SequenceDataset(torch.utils.data.Dataset):
                 fields.add_path(episode)
             fields.finalize()
 
-            #self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
-            self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
+            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
+            #self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
             #self.indices = self.make_indices(fields.path_lengths, horizon)
             self.indices = self.make_indices(fields.n_episodes, horizon)
 
