@@ -175,7 +175,7 @@ class Trainer(object):
         if self.save_checkpoints:
             savepath = os.path.join(savepath, f'state_{self.step}.pt')
         else:
-            savepath = os.path.join(savepath, 'langdiffuser_1e5_1000_200_bsize_8_debug_newdataloader.pt') #'langdiffuser_1e6_10000_200_bsize_8_debug.pt')
+            savepath = os.path.join(savepath, 'langdiffuser_1e4_1000_200_bsize_8_debug_newdataloader_v2.pt') #'langdiffuser_1e6_10000_200_bsize_8_debug.pt')
         torch.save(data, savepath)
         #logger.print(f'[ utils/training ] Saved model to {savepath}')
 
@@ -184,7 +184,7 @@ class Trainer(object):
             loads model and ema from disk
         '''
         #loadpath = os.path.join(self.bucket, logger.prefix, f'checkpoint/state.pt')
-        loadpath = os.path.join(self.bucket, 'checkpoint/langdiffuser_1e5_1000_200_bsize_8_newdataloader.pt') #'checkpoint/langdiffuser_1e6_10000_200_bsize_8_debug.pt')
+        loadpath = os.path.join(self.bucket, 'checkpoint/langdiffuser_1e4_1000_200_bsize_8_newdataloader_v2.pt') #'checkpoint/langdiffuser_1e6_10000_200_bsize_8_debug.pt')
         # data = logger.load_torch(loadpath)
         data = torch.load(loadpath)
 
