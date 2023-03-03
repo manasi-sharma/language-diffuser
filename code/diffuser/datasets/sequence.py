@@ -104,7 +104,7 @@ class SequenceDataset(torch.utils.data.Dataset):
                 batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
 
                 perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
-                import pdb;pdb.set_trace()
+                #import pdb;pdb.set_trace()
                 latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
                 
                 len_hor = len(perceptual_emb)
@@ -115,6 +115,12 @@ class SequenceDataset(torch.utils.data.Dataset):
 
                 fields.add_path(episode)
             fields.finalize()
+
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations.npy', self.fields.observations)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions.npy', self.fields.actions)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy', self.fields.language)
+            import pdb;pdb.set_trace()
+            sys.exit()
 
             self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
             #self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
