@@ -117,9 +117,9 @@ class SequenceDataset(torch.utils.data.Dataset):
             fields.finalize()
 
             #import pdb;pdb.set_trace()
-            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations_debug.npy', fields.observations)
-            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions_debug.npy', fields.actions)
-            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language_debug.npy', fields.language)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations.npy', fields.observations)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions.npy', fields.actions)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy', fields.language)
             import pdb;pdb.set_trace()
             sys.exit()
 
