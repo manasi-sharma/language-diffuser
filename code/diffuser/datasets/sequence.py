@@ -117,13 +117,13 @@ class SequenceDataset(torch.utils.data.Dataset):
             fields.finalize()
 
             #import pdb;pdb.set_trace()
-            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations_debug.npy', fields.observations)
-            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions_debug.npy', fields.actions)
-            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language_debug.npy', fields.language)
-            import pdb;pdb.set_trace()
-            sys.exit()
+            #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations_debug.npy', fields.observations)
+            #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions_debug.npy', fields.actions)
+            #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language_debug.npy', fields.language)
+            #import pdb;pdb.set_trace()
+            #sys.exit()
 
-            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
+            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields.path_lengths)
             #self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
             self.indices = self.make_indices(fields.path_lengths, horizon)
             #self.indices = self.make_indices(fields.n_episodes, horizon)
@@ -134,6 +134,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             self.n_episodes = fields.n_episodes
             self.path_lengths = fields.path_lengths
             self.normalize()
+
+            import pdb;pdb.set_trace()
 
         print(fields)
         
