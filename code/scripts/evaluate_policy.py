@@ -346,6 +346,7 @@ def evaluate_policy(model, env, lang_embeddings, args):
     #import pdb;pdb.set_trace()
     for i, (initial_state, eval_sequence) in enumerate(eval_sequences):
         #t1= time.time()
+        import pdb;pdb.set_trace()
         result = evaluate_sequence(
             env, model, task_oracle, initial_state, eval_sequence, lang_embeddings, val_annotations, args, plans
         )
@@ -377,9 +378,9 @@ def evaluate_sequence(
         print("Subtask: ", end="")
     for subtask in eval_sequence:
         #t1= time.time()
+        import pdb;pdb.set_trace()
         success = rollout(env, model, task_checker, args, subtask, lang_embeddings, val_annotations, plans)
         #print("\n\n\TIMEEEE diff: ", time.time()-t1)
-        #import pdb;pdb.set_trace()
         if success:
             success_counter += 1
         else:
@@ -406,8 +407,9 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     #plan, latent_goal = model.get_pp_plan_lang(obs, goal)
     #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
-    #import pdb;pdb.set_trace()
+    import pdb;pdb.set_trace()
     for step in range(args.ep_len):
+        import pdb;pdb.set_trace()
         t1 = time.time()
         action = model.step(obs, goal)
         #print("\n\n\ntime diff: ", time.time()-t1)

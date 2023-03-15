@@ -78,7 +78,6 @@ class SequenceDataset(torch.utils.data.Dataset):
                 self.fields = fields
 
                 self.indices = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy')
-                import pdb;pdb.set_trace()
             else:
 
                 fields = {}
