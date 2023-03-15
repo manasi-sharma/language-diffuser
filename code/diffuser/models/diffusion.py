@@ -425,10 +425,7 @@ class GaussianInvDynDiffusion(nn.Module):
     @torch.no_grad()
     def p_sample(self, x, cond, t, returns=None):
         b, *_, device = *x.shape, x.device
-        t1 = time.time()
         model_mean, _, model_log_variance = self.p_mean_variance(x=x, cond=cond, t=t, returns=returns)
-        print("\n\nTIMEEEE DIFF p_mean_variance: ", time.time() - t1)
-        import pdb;pdb.set_trace()
         noise = 0.5*torch.randn_like(x)
         # no noise when t == 0
         nonzero_mask = (1 - (t == 0).float()).reshape(b, *((1,) * (len(x.shape) - 1)))
@@ -447,7 +444,10 @@ class GaussianInvDynDiffusion(nn.Module):
         progress = utils.Progress(self.n_timesteps) if verbose else utils.Silent()
         for i in reversed(range(0, self.n_timesteps)):
             timesteps = torch.full((batch_size,), i, device=device, dtype=torch.long)
+            t1 = time.time()
             x = self.p_sample(x, cond, timesteps, returns)
+            print("\n\nTIMEEEE DIFF p_mean_variance: ", time.time() - t1)
+            import pdb;pdb.set_trace()
             x = apply_conditioning(x, cond, 0)
 
             progress.update({'t': i})
