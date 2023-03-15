@@ -32,13 +32,15 @@ class SequenceDataset(torch.utils.data.Dataset):
         max_n_episodes=1013111,
         use_padding=True, 
         include_returns=False,
-        read_npy_embeddings=True):
+        read_npy_embeddings=True,
+        use_normed_embeddings=True):
 
         self.horizon = horizon
         self.max_path_length = max_path_length
         self.use_padding = use_padding
         self.include_returns = include_returns
         self.read_npy_embeddings = read_npy_embeddings
+        self.use_normed_embeddings = use_normed_embeddings
         
         """Dataset initialization"""
         datamodule = hydra.utils.instantiate(cfg.datamodule)
@@ -60,40 +62,41 @@ class SequenceDataset(torch.utils.data.Dataset):
         for param in model.parameters():
             param.requires_grad = False
         model = model.to(torch.device('cuda'))
-        #import pdb;pdb.set_trace()
 
         """Creating embeddings initialization"""
         self.read_npy_embeddings = False
         if self.read_npy_embeddings:
-            #
-            # import pdb;pdb.set_trace()
-            #t1= time()
-            #normed_observations = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy')
-            #normed_actions = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy')
-            #language = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy')
-            #print("\n\n\ntimeeee: ", (time() - t1)/60)
-            #import pdb;pdb.set_trace()
+            if self.use_normed_embeddings:
+                fields = {}
+                fields['normed_observations'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations_debug.npy')
+                fields['normed_actions'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy')
+                fields['language'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_language_debug.npy')
 
-            fields = {}
-            fields['observations'] = normed_observations
-            fields['actions'] = normed_actions
-            fields['language'] = language
+                self.observation_dim = fields['observations'].shape[-1]
+                self.action_dim = fields['actions'].shape[-1]
+                self.n_episodes = fields['observations'].shape[0]
+                self.fields = fields
 
-            self.observation_dim = fields['observations'].shape[-1]
-            self.action_dim = fields['actions'].shape[-1]
-            self.fields = fields
-            self.n_episodes = fields['observations'].shape[0]
-            #self.path_lengths = fields.path_lengths
+                self.indices = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy')
+                import pdb;pdb.set_trace()
+            else:
 
-            #self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields['path_lengths'])
-            self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
-            #self.indices = self.make_indices(fields.path_lengths, horizon)
-            self.indices = self.make_indices(self.n_episodes, horizon)
-            self.normalize()
+                fields = {}
+                fields['observations'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations_debug.npy')
+                fields['actions'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy')
+                fields['language'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language_debug.npy')
+
+                self.observation_dim = fields['observations'].shape[-1]
+                self.action_dim = fields['actions'].shape[-1]
+                self.fields = fields
+                self.n_episodes = fields['observations'].shape[0]
+
+                self.normalizer = DatasetNormalizer(fields, normalizer)
+                self.indices = self.make_indices(self.n_episodes, horizon)
+                self.normalize()
         else:
-            fields = ReplayBuffer(max_n_episodes, max_path_length) #, termination_penalty)
+            fields = ReplayBuffer(max_n_episodes, max_path_length)
             for i, batch in enumerate(calvin_dataloader):
-                #print(i)
                 episode = {}
                 if train_flag:
                     batch_obj = batch
@@ -102,7 +105,6 @@ class SequenceDataset(torch.utils.data.Dataset):
                 
                 batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda"))
                 batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
-                #batch_obj['language_ann_words']
 
                 perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
                 latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
@@ -116,16 +118,7 @@ class SequenceDataset(torch.utils.data.Dataset):
                 fields.add_path(episode)
             fields.finalize()
 
-            #import pdb;pdb.set_trace()
-            #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations_debug.npy', fields.observations)
-            #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions_debug.npy', fields.actions)
-            #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language_debug.npy', fields.language)
-            #import pdb;pdb.set_trace()
-            #sys.exit()
-
-            #self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields.path_lengths)
-            self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
-            #self.indices = self.make_indices(fields.path_lengths, horizon)
+            self.normalizer = DatasetNormalizer(fields, normalizer)
             self.indices = self.make_indices(fields.n_episodes, horizon)
 
             self.observation_dim = fields.observations.shape[-1]
@@ -139,16 +132,9 @@ class SequenceDataset(torch.utils.data.Dataset):
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy', fields.normed_actions)
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_language_debug.npy', fields.language)
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy', self.indices)
-
             import pdb;pdb.set_trace()
 
         print(fields)
-        
-        #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations.npy', self.fields.normed_observations)
-        #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions.npy', self.fields.normed_actions)
-        #np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language.npy', self.fields.language)
-        #import pdb;pdb.set_trace()
-        #sys.exit()
 
         # shapes = {key: val.shape for key, val in self.fields.items()}
         # print(f'[ datasets/mujoco ] Dataset fields: {shapes}')
