@@ -187,14 +187,16 @@ class CustomModel:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         conditions = {0: to_torch(obs, device=device)}
         latent_goal = to_torch(latent_goal, device=device)
-        #t1 = time.time()
+        t1 = time.time()
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
-        #import pdb;pdb.set_trace()
+        print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        import pdb;pdb.set_trace()
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
+        t2 = time.time()
         action = self.trainer.ema_model.inv_model(obs_comb)
-        #print("\n\n\ntime diff: ", time.time()-t1)
-        #import pdb;pdb.set_trace()
+        print("\n\n\n2 time diff: ", time.time()-t1)
+        import pdb;pdb.set_trace()
 
         #action = action.reshape(len(action[0]), 1)
         action = action.squeeze()
@@ -378,11 +380,11 @@ def evaluate_sequence(
         print(f"Evaluating sequence: {' -> '.join(eval_sequence)}")
         print("Subtask: ", end="")
     for subtask in eval_sequence:
-        t1= time.time()
+        #t1= time.time()
         #import pdb;pdb.set_trace()
         success = rollout(env, model, task_checker, args, subtask, lang_embeddings, val_annotations, plans)
-        print("\n\n\TIMEEEE diff: ", time.time()-t1)
-        import pdb;pdb.set_trace()
+        #print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        #import pdb;pdb.set_trace()
         if success:
             success_counter += 1
         else:
