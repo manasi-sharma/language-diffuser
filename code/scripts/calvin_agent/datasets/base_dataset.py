@@ -114,7 +114,6 @@ class BaseDataset(Dataset):
         else:
             idx, window_size = idx
         sequence = self._get_sequences(idx, window_size)
-        import pdb;pdb.set_trace()
         if self.pad:
             pad_size = self._get_pad_size(sequence)
             sequence = self._pad_sequence(sequence, pad_size)
@@ -132,6 +131,7 @@ class BaseDataset(Dataset):
             dict: Dictionary of tensors of loaded sequence with different input modalities and actions.
         """
         episode = self._load_episode(idx, window_size)
+        import pdb;pdb.set_trace()
 
         seq_state_obs = process_state(episode, self.observation_space, self.transforms, self.proprio_state)
         seq_rgb_obs = process_rgb(episode, self.observation_space, self.transforms)
