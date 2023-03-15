@@ -82,7 +82,7 @@ class SequenceDataset(torch.utils.data.Dataset):
 
                 with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.pkl", "rb") as f:
                     self.normalizer = pickle.load(f)
-                import pdb;pdb.set_trace()
+                #import pdb;pdb.set_trace()
             else:
 
                 fields = {}
