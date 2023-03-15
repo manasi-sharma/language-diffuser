@@ -12,6 +12,8 @@ from .helpers import (
     Losses,
 )
 
+import time
+
 class GaussianDiffusion(nn.Module):
     def __init__(self, model, horizon, observation_dim, action_dim, n_timesteps=1000,
         loss_type='l1', clip_denoised=False, predict_epsilon=True,
@@ -423,7 +425,10 @@ class GaussianInvDynDiffusion(nn.Module):
     @torch.no_grad()
     def p_sample(self, x, cond, t, returns=None):
         b, *_, device = *x.shape, x.device
+        t1 = time.time()
         model_mean, _, model_log_variance = self.p_mean_variance(x=x, cond=cond, t=t, returns=returns)
+        print("\n\nTIMEEEE DIFF p_mean_variance: ", time.time() - t1)
+        import pdb;pdb.set_trace()
         noise = 0.5*torch.randn_like(x)
         # no noise when t == 0
         nonzero_mask = (1 - (t == 0).float()).reshape(b, *((1,) * (len(x.shape) - 1)))
