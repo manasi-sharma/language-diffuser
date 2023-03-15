@@ -442,17 +442,19 @@ class GaussianInvDynDiffusion(nn.Module):
         if return_diffusion: diffusion = [x]
 
         progress = utils.Progress(self.n_timesteps) if verbose else utils.Silent()
+
+        t1 = time.time()
         for i in reversed(range(0, self.n_timesteps)):
             timesteps = torch.full((batch_size,), i, device=device, dtype=torch.long)
-            t1 = time.time()
             x = self.p_sample(x, cond, timesteps, returns)
-            print("\n\nTIMEEEE DIFF p_mean_variance: ", time.time() - t1)
-            import pdb;pdb.set_trace()
             x = apply_conditioning(x, cond, 0)
 
             progress.update({'t': i})
 
             if return_diffusion: diffusion.append(x)
+        
+        print("\n\nTIMEEEE DIFF p_mean_variance: ", time.time() - t1)
+        import pdb;pdb.set_trace()
 
         progress.close()
 
