@@ -101,7 +101,6 @@ class BaseDataset(Dataset):
         Returns:
             Loaded sequence.
         """
-        import pdb;pdb.set_trace()
         if isinstance(idx, int):
             # When max_ws_size and min_ws_size are equal, avoid unnecessary padding
             # acts like Constant dataset. Currently, used for language data
@@ -115,6 +114,7 @@ class BaseDataset(Dataset):
         else:
             idx, window_size = idx
         sequence = self._get_sequences(idx, window_size)
+        import pdb;pdb.set_trace()
         if self.pad:
             pad_size = self._get_pad_size(sequence)
             sequence = self._pad_sequence(sequence, pad_size)
