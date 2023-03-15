@@ -90,7 +90,6 @@ class BaseDataset(Dataset):
         assert self.abs_datasets_dir.is_dir()
         logger.info(f"loading dataset at {self.abs_datasets_dir}")
         logger.info("finished loading dataset")
-        import pdb;pdb.set_trace()
 
     def __getitem__(self, idx: Union[int, Tuple[int, int]]) -> Dict:
         """
@@ -102,6 +101,7 @@ class BaseDataset(Dataset):
         Returns:
             Loaded sequence.
         """
+        import pdb;pdb.set_trace()
         if isinstance(idx, int):
             # When max_ws_size and min_ws_size are equal, avoid unnecessary padding
             # acts like Constant dataset. Currently, used for language data
