@@ -188,9 +188,10 @@ class CustomModel:
         conditions = {0: to_torch(obs, device=device)}
         latent_goal = to_torch(latent_goal, device=device)
         #t1 = time.time()
+        import pdb;pdb.set_trace()
         samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
         #print("\n\n\TIMEEEE diff: ", time.time()-t1)
-        #import pdb;pdb.set_trace()
+        import pdb;pdb.set_trace()
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
         obs_comb = obs_comb.reshape(-1, 2*self.observation_dim)
         #t2 = time.time()
@@ -383,7 +384,6 @@ def evaluate_sequence(
         #t1= time.time()
         #import pdb;pdb.set_trace()
         success = rollout(env, model, task_checker, args, subtask, lang_embeddings, val_annotations, plans)
-        #print("\n\n\TIMEEEE diff: ", time.time()-t1)
         #import pdb;pdb.set_trace()
         if success:
             success_counter += 1
