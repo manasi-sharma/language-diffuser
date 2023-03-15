@@ -15,6 +15,7 @@ import hydra
 import sys
 
 from time import time
+import pickle
 
 
 RewardBatch = namedtuple('Batch', 'trajectories conditions returns')
@@ -64,7 +65,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         model = model.to(torch.device('cuda'))
 
         """Creating embeddings initialization"""
-        #self.read_npy_embeddings = False
+        self.read_npy_embeddings = False
         if self.read_npy_embeddings:
             if self.use_normed_embeddings:
                 fields = {}
@@ -78,11 +79,14 @@ class SequenceDataset(torch.utils.data.Dataset):
                 self.fields = fields
 
                 self.indices = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy')
+
+                with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.npy", "rb") as f:
+                    self.normalizer = pickle.load(f)
             else:
 
                 fields = {}
                 fields['observations'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/observations_debug.npy')
-                fields['actions'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy')
+                fields['actions'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/actions_debug.npy')
                 fields['language'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/language_debug.npy')
 
                 self.observation_dim = fields['observations'].shape[-1]
@@ -131,6 +135,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy', fields.normed_actions)
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_language_debug.npy', fields.language)
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy', self.indices)
+            with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.npy", "wb") as f:
+                pickle.dump(self.normalizer, f)
             import pdb;pdb.set_trace()
 
         print(fields)
