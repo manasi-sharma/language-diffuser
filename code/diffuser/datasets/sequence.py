@@ -102,9 +102,9 @@ class SequenceDataset(torch.utils.data.Dataset):
                 
                 batch_obj["robot_obs"] = batch_obj["robot_obs"].to(torch.device("cuda"))
                 batch_obj["lang"] = batch_obj["lang"].to(torch.device("cuda"))
+                #batch_obj['language_ann_words']
 
                 perceptual_emb = model.perceptual_encoder.proprio_encoder(batch_obj["robot_obs"]).squeeze(0).cpu().numpy() # torch.Size([1, 32, 32]) --> torch.Size([32, 32])
-                import pdb;pdb.set_trace()
                 latent_goal = model.language_goal(batch_obj['lang']).detach().cpu().numpy() #torch.Size([32, 384]) --> torch.Size([32, 32])
                 
                 len_hor = len(perceptual_emb)
@@ -123,10 +123,10 @@ class SequenceDataset(torch.utils.data.Dataset):
             #import pdb;pdb.set_trace()
             #sys.exit()
 
-            self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields.path_lengths)
-            #self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
-            self.indices = self.make_indices(fields.path_lengths, horizon)
-            #self.indices = self.make_indices(fields.n_episodes, horizon)
+            #self.normalizer = DatasetNormalizer(fields, normalizer, path_lengths=fields.path_lengths)
+            self.normalizer = DatasetNormalizer(fields, normalizer) #, path_lengths=fields['path_lengths'])
+            #self.indices = self.make_indices(fields.path_lengths, horizon)
+            self.indices = self.make_indices(fields.n_episodes, horizon)
 
             self.observation_dim = fields.observations.shape[-1]
             self.action_dim = fields.actions.shape[-1]
@@ -134,6 +134,11 @@ class SequenceDataset(torch.utils.data.Dataset):
             self.n_episodes = fields.n_episodes
             self.path_lengths = fields.path_lengths
             self.normalize()
+
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_observations_debug.npy', fields.normed_observations)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy', fields.normed_actions)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_language_debug.npy', fields.language)
+            np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy', self.indices)
 
             import pdb;pdb.set_trace()
 
@@ -157,8 +162,8 @@ class SequenceDataset(torch.utils.data.Dataset):
             normed = self.normalizer(array, key)
             self.fields[f'normed_{key}'] = normed.reshape(self.n_episodes, self.max_path_length, -1)
 
-    def make_indices(self, path_lengths, horizon):
-        #def make_indices(self, path_lengths_len, horizon): #path_lengths #path_lengths_len
+    #def make_indices(self, path_lengths, horizon):
+    def make_indices(self, len_path_lengths, horizon): #path_lengths #path_lengths_len
         '''
             makes indices for sampling from dataset;
             each index maps to a datapoint
@@ -166,9 +171,9 @@ class SequenceDataset(torch.utils.data.Dataset):
         #import pdb;pdb.set_trace()
         indices = []
         #path_length = 32
-        for i, path_length in enumerate(path_lengths):
-            #for i in range(path_lengths_len):
-            assert path_length == 32
+        #for i, path_length in enumerate(path_lengths):
+        path_length = 32
+        for i in range(len_path_lengths):
             max_start = min(path_length - 1, self.max_path_length - horizon)
             if not self.use_padding:
                 max_start = min(max_start, path_length - horizon)
