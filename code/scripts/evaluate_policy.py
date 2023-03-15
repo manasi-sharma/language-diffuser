@@ -181,6 +181,7 @@ class CustomModel:
         perceptual_emb = self.encoding_model.perceptual_encoder.proprio_encoder(new_obs).squeeze(0)
         latent_goal = self.encoding_model.language_goal(goal['lang'])
         #perceptual_emb = self.encoding_model.perceptual_encoder(obs['rgb_obs'], obs["depth_obs"], obs["robot_obs"]).squeeze().detach().numpy() #torch.Size([32, 32, 3, 200, 200]) --> torch.Size([32, 32, 72])
+        import pdb;pdb.set_trace()
         obs = self.dataset.normalizer.normalize(perceptual_emb, 'observations')
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
