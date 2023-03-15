@@ -189,7 +189,7 @@ class CustomModel:
         latent_goal = to_torch(latent_goal, device=device)
         #t1 = time.time()
         import pdb;pdb.set_trace()
-        samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal) #goal)
+        samples = self.trainer.ema_model.conditional_sample(conditions, returns=latent_goal, horizon=16) #goal)
         #print("\n\n\TIMEEEE diff: ", time.time()-t1)
         import pdb;pdb.set_trace()
         obs_comb = torch.cat([samples[:, 0, :], samples[:, 1, :]], dim=-1)
