@@ -146,6 +146,7 @@ def process_language(episode: Dict[str, np.ndarray], transforms: Dict, with_lang
         if "language" in transforms:
             lang = transforms["language"](lang)
         seq_lang["lang"] = lang
+    import pdb;pdb.set_trace()
     return seq_lang
 
 

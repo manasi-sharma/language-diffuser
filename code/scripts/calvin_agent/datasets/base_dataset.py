@@ -131,7 +131,6 @@ class BaseDataset(Dataset):
             dict: Dictionary of tensors of loaded sequence with different input modalities and actions.
         """
         episode = self._load_episode(idx, window_size)
-        import pdb;pdb.set_trace()
 
         seq_state_obs = process_state(episode, self.observation_space, self.transforms, self.proprio_state)
         seq_rgb_obs = process_rgb(episode, self.observation_space, self.transforms)
