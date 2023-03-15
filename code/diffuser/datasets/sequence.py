@@ -72,9 +72,9 @@ class SequenceDataset(torch.utils.data.Dataset):
                 fields['normed_actions'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy')
                 fields['language'] = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_language_debug.npy')
 
-                self.observation_dim = fields['observations'].shape[-1]
-                self.action_dim = fields['actions'].shape[-1]
-                self.n_episodes = fields['observations'].shape[0]
+                self.observation_dim = fields['normed_observations'].shape[-1]
+                self.action_dim = fields['normed_actions'].shape[-1]
+                self.n_episodes = fields['normed_observations'].shape[0]
                 self.fields = fields
 
                 self.indices = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy')
