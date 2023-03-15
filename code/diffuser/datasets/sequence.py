@@ -80,7 +80,7 @@ class SequenceDataset(torch.utils.data.Dataset):
 
                 self.indices = np.load('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy')
 
-                with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.npy", "rb") as f:
+                with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.pkl", "rb") as f:
                     self.normalizer = pickle.load(f)
             else:
 
@@ -135,7 +135,7 @@ class SequenceDataset(torch.utils.data.Dataset):
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_actions_debug.npy', fields.normed_actions)
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normed_language_debug.npy', fields.language)
             np.save('/iliad/u/manasis/language-diffuser/code/dataset_npy_files/indices_debug.npy', self.indices)
-            with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.npy", "wb") as f:
+            with open("/iliad/u/manasis/language-diffuser/code/dataset_npy_files/normalizer_debug.pkl", "wb") as f:
                 pickle.dump(self.normalizer, f)
             import pdb;pdb.set_trace()
 
