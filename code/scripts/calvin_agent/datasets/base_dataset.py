@@ -90,6 +90,7 @@ class BaseDataset(Dataset):
         assert self.abs_datasets_dir.is_dir()
         logger.info(f"loading dataset at {self.abs_datasets_dir}")
         logger.info("finished loading dataset")
+        import pdb;pdb.set_trace()
 
     def __getitem__(self, idx: Union[int, Tuple[int, int]]) -> Dict:
         """
@@ -137,11 +138,9 @@ class BaseDataset(Dataset):
         seq_depth_obs = process_depth(episode, self.observation_space, self.transforms)
         seq_acts = process_actions(episode, self.observation_space, self.transforms)
         info = get_state_info_dict(episode)
-        import pdb;pdb.set_trace
         seq_lang = process_language(episode, self.transforms, self.with_lang)
         info = self._add_language_info(info, idx)
         seq_dict = {**seq_state_obs, **seq_rgb_obs, **seq_depth_obs, **seq_acts, **info, **seq_lang}  # type:ignore
-        import pdb;pdb.set_trace
         seq_dict["idx"] = idx  # type:ignore
 
         return seq_dict
