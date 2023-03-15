@@ -140,7 +140,7 @@ class SequenceDataset(torch.utils.data.Dataset):
                 pickle.dump(self.normalizer, f)
             import pdb;pdb.set_trace()
 
-        print(fields)
+        #print(fields)
 
         # shapes = {key: val.shape for key, val in self.fields.items()}
         # print(f'[ datasets/mujoco ] Dataset fields: {shapes}')

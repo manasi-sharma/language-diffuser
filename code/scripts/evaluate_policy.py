@@ -378,10 +378,11 @@ def evaluate_sequence(
         print(f"Evaluating sequence: {' -> '.join(eval_sequence)}")
         print("Subtask: ", end="")
     for subtask in eval_sequence:
-        #t1= time.time()
+        t1= time.time()
         #import pdb;pdb.set_trace()
         success = rollout(env, model, task_checker, args, subtask, lang_embeddings, val_annotations, plans)
-        #print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        print("\n\n\TIMEEEE diff: ", time.time()-t1)
+        import pdb;pdb.set_trace()
         if success:
             success_counter += 1
         else:
@@ -409,12 +410,12 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
     #plans[subtask].append((plan.cpu(), latent_goal.cpu()))
 
     #import pdb;pdb.set_trace()
-    t2= time.time()
+    #t2= time.time()
     for step in range(args.ep_len):
-        t1 = time.time()
+        #t1 = time.time()
         action = model.step(obs, goal)
-        print("\n\n\ntime diff: ", time.time()-t1)
-        import pdb;pdb.set_trace()
+        #print("\n\n\ntime diff: ", time.time()-t1)
+        #import pdb;pdb.set_trace()
         obs, _, _, current_info = env.step(action)
         if args.debug:
             img = env.render(mode="rgb_array")
@@ -426,7 +427,7 @@ def rollout(env, model, task_oracle, args, subtask, lang_embeddings, val_annotat
             if args.debug:
                 print(colored("success", "green"), end=" ")
             return True
-    print("\n\n\nfull time diff: ", time.time()-t2)
+    #print("\n\n\nfull time diff: ", time.time()-t2)
     #import pdb;pdb.set_trace()
     if args.debug:
         print(colored("fail", "red"), end=" ")
