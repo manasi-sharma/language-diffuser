@@ -64,7 +64,7 @@ class SequenceDataset(torch.utils.data.Dataset):
         model = model.to(torch.device('cuda'))
 
         """Creating embeddings initialization"""
-        self.read_npy_embeddings = False
+        #self.read_npy_embeddings = False
         if self.read_npy_embeddings:
             if self.use_normed_embeddings:
                 fields = {}
